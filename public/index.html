@@ -207,6 +207,23 @@ input{-webkit-user-select:text;user-select:text}
 .msg{min-height:1.4em;margin:0;font:600 14px/1.35 var(--ui);color:var(--sand)}
 .msg:empty{display:none}
 .fam-line{margin:0;font:600 16px/1.35 var(--ui);color:var(--sand)}
+.av.xs{width:20px;height:20px;font-size:10px;box-shadow:none}
+.pl .lock{width:12px;height:12px;flex:none;margin-left:-2px;opacity:.7;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 10V7a5 5 0 0 1 10 0v3h1a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1zm2 0h6V7a3 3 0 0 0-6 0z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 10V7a5 5 0 0 1 10 0v3h1a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1zm2 0h6V7a3 3 0 0 0-6 0z'/%3E%3C/svg%3E") center/contain no-repeat;color:var(--muted)}
+.field.pin{max-width:200px;font:400 24px/1 var(--display);letter-spacing:.4em;text-align:center}
+.gtab-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.03)}
+.gtab{width:100%;border-collapse:collapse;font:600 14px/1 var(--ui);font-variant-numeric:tabular-nums}
+.gtab th,.gtab td{padding:9px 3px;text-align:center;white-space:nowrap}
+.gtab thead th{font:700 11px/1 var(--ui);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line)}
+.gtab thead th:first-child{text-align:left;padding-left:10px}
+.gtab tbody th{text-align:left;padding-left:8px;font-weight:600}
+.gtab .nmc{display:flex;align-items:center;gap:6px;max-width:104px}
+.gtab .nmc b{min-width:0;overflow:hidden;text-overflow:ellipsis;font-weight:600;color:var(--ink)}
+.gtab tr.me .nmc b{color:var(--sand)}
+.gtab td{color:var(--ink)}
+.gtab td.z{color:rgba(166,155,194,.4)}
+.gtab td.t,.gtab thead th:last-child{padding-right:10px}
+.gtab td.t{font:400 15px/1 var(--display);color:var(--sand)}
+.gtab tbody tr+tr>*{border-top:1px solid rgba(236,200,142,.08)}
 @media (prefers-reduced-motion:reduce){.hint,.chip.warn{animation:none}}
 </style>
 </head>
@@ -335,7 +352,16 @@ input{-webkit-user-select:text;user-select:text}
           <label class="lbl" for="famName">New player</label>
           <input class="field" id="famName" type="text" maxlength="16" autocomplete="off" spellcheck="false" placeholder="Name">
           <div class="swatches" id="famColors" role="radiogroup" aria-label="Colour"></div>
+          <label class="lbl" for="famNewPin">4-digit PIN</label>
+          <input class="field pin" id="famNewPin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="new-password" placeholder="0000">
+          <p class="fine">Needed once on each device to play as this player.</p>
           <div class="row"><button class="btn primary" id="famSave" type="submit">Add player</button><button class="btn" id="famCancel" type="button">Cancel</button></div>
+        </form>
+        <form class="add-form" id="famPin" hidden>
+          <label class="lbl" for="famPinIn" id="famPinLbl">PIN</label>
+          <input class="field pin" id="famPinIn" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" placeholder="0000">
+          <p class="fine" id="famPinHint"></p>
+          <div class="row"><button class="btn primary" id="famPinOk" type="submit">Unlock</button><button class="btn" id="famPinCancel" type="button">Cancel</button></div>
         </form>
       </div>
       <div class="fam-sec">
@@ -343,9 +369,15 @@ input{-webkit-user-select:text;user-select:text}
         <div class="tabs" id="famTabs" role="tablist" aria-label="Board"></div>
         <ol class="ranks" id="famRanks"></ol>
       </div>
+      <div class="fam-sec">
+        <span class="lbl" id="famGamesLbl">Games by starting speed</span>
+        <div class="gtab-wrap" id="famGamesWrap" hidden><table class="gtab" id="famGames"></table></div>
+        <p class="fine" id="famGamesEmpty"></p>
+      </div>
       <div class="fam-foot">
         <p class="fine">Family code <b id="famCodeTxt"></b>. Open the link on another device, or type the code there.</p>
         <button class="btn sm" id="famShare" type="button">Add a device</button>
+        <button class="btn sm" id="famChPin" type="button" hidden>Change PIN</button>
         <button class="btn sm" id="famRemove" type="button" hidden>Remove player</button>
         <button class="btn sm" id="famLeave" type="button">Leave board</button>
       </div>
@@ -1771,22 +1803,33 @@ function toast(title, body, color, ms) {
 }
 
 
-/* ---------- family board: one leaderboard for every device at home (API: worker/index.js) ---------- */
+/* ---------- family board: one leaderboard for every device at home (API: worker/index.js) ----------
+   Each player has a 4-digit PIN. Entering it once on a device stores a token for that player on the device;
+   playing as the player, changing the PIN and removing the player all send that token. */
 const CODE_RE = /^[A-HJ-NP-Z2-9]{8}$/;
+const PIN_RE = /^[0-9]{4}$/;
 const normCode = s => String(s || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
 const prettyCode = c => c ? c.slice(0, 4) + '-' + c.slice(4) : '';
 const P_COLORS = ['#f5a63b', '#5fe1e8', '#ff4f9a', '#93e26a', '#c4b2ff', '#ffe14d', '#6fa8ff', '#ff5f4a'];
 const MAX_PLAYERS = 12;
 const famScreen = $('#famScreen'), famMsg = $('#famMsg'), whoBtn = $('#whoBtn');
 const Fam = {
-  code: null, pid: null, players: [], live: false, note: '', tab: 'dunes', back: null, adding: false, colour: 0, flushing: false, busy: false,
-  me() { return this.pid ? this.players.find(p => p.id === this.pid) || null : null; },
-  best(p, b) { return p && p.b && p.b[b] ? p.b[b].s | 0 : 0; }
+  code: null, pid: null, raw: [], players: [], toks: {}, live: false, note: '', tab: 'dunes', back: null,
+  adding: false, colour: 0, pinFor: null, flushing: false, lockedOut: '',
+  /* the player this device plays as: picked here and unlocked with their PIN */
+  me() { return this.pid && this.toks[this.pid] ? this.players.find(p => p.id === this.pid) || null : null; },
+  best(p, b) { return p && p.b && p.b[b] ? p.b[b].s | 0 : 0; },
+  games(p, b) { let n = 0; const g = p && p.g && p.g[b]; if (g) for (const k in g) n += g[k] | 0; return n; }
 };
 let pendingQ = [];
-const savePending = () => store.set('pending', pendingQ.slice(-50));
+const savePending = () => store.set('pending', pendingQ.slice(-200));
 const pc = p => P_COLORS[p && p.c] || P_COLORS[0];
 const initial = n => (Array.from(String(n || '?').trim())[0] || '?').toUpperCase();
+const tokensOf = code => { const t = store.get('toks.' + code, null); return t && typeof t === 'object' ? t : {}; };
+function setTok(pid, token) {
+  if (token) Fam.toks[pid] = token; else delete Fam.toks[pid];
+  store.set('toks.' + Fam.code, Fam.toks);
+}
 
 function famLoad() {
   try {
@@ -1798,32 +1841,43 @@ function famLoad() {
       history.replaceState(null, '', u.pathname + u.search + u.hash);
     }
   } catch (e) { /* no URL API */ }
-  const c = store.get('family', null);
-  Fam.code = CODE_RE.test(c || '') ? c : null;
-  Fam.pid = Fam.code ? store.get('player.' + Fam.code, null) : null;
-  const cached = Fam.code ? store.get('cache.' + Fam.code, null) : null;
-  Fam.players = Array.isArray(cached) ? cached : [];
   pendingQ = store.get('pending', []);
   if (!Array.isArray(pendingQ)) pendingQ = [];
-  applyPending();
+  const c = store.get('family', null);
+  if (CODE_RE.test(c || '')) famSet(c); else Fam.code = null;
 }
-async function famApi(method, path, body) {
+function famSet(code) {
+  Fam.code = code; store.set('family', code);
+  Fam.pid = store.get('player.' + code, null);
+  Fam.toks = tokensOf(code);
+  const cached = store.get('cache.' + code, null);
+  Fam.raw = Array.isArray(cached) ? cached : [];
+  Fam.live = false; Fam.note = ''; Fam.adding = false; Fam.pinFor = null;
+  famView();
+}
+async function famApi(method, path, body, token) {
+  const headers = {};
+  if (body) headers['content-type'] = 'application/json';
+  if (token) headers.authorization = 'Bearer ' + token;
   let r;
   try {
-    r = await fetch('/api' + path, { method, cache: 'no-store', headers: body ? { 'content-type': 'application/json' } : undefined, body: body ? JSON.stringify(body) : undefined });
+    r = await fetch('/api' + path, { method, cache: 'no-store', headers, body: body ? JSON.stringify(body) : undefined });
   } catch (e) { const err = new Error('offline'); err.status = 0; throw err; }
   if (!r.ok) { const err = new Error('http ' + r.status); err.status = r.status; throw err; }
   return r.json();
 }
-/* scores still waiting to reach the server count already, so the board never shows a lower best than you just made */
-function applyPending() {
+/* What the board shows: the server's list plus games this device finished but has not sent yet */
+function famView() {
+  Fam.players = Fam.raw.map(p => ({ ...p, b: { ...(p.b || {}) }, g: Object.fromEntries(Object.entries(p.g || {}).map(([k, v]) => [k, { ...v }])) }));
   for (const q of pendingQ) {
     if (q.code !== Fam.code) continue;
     const p = Fam.players.find(x => x.id === q.pid); if (!p) continue;
-    p.b = p.b || {};
-    if (!p.b[q.board] || p.b[q.board].s < q.s) p.b[q.board] = { s: q.s, sp: q.sp, lv: q.lv, len: q.len, at: q.at };
+    const g = p.g[q.board] = p.g[q.board] || {};
+    g[q.sp] = (g[q.sp] | 0) + 1;
+    if (q.s > 0 && (!p.b[q.board] || p.b[q.board].s < q.s)) p.b[q.board] = { s: q.s, sp: q.sp, lv: q.lv, len: q.len, at: q.at };
   }
 }
+function famStore() { store.set('cache.' + Fam.code, Fam.raw); }
 let famTimer = 0;
 async function famRefresh() {
   clearTimeout(famTimer); famTimer = 0;
@@ -1832,57 +1886,63 @@ async function famRefresh() {
     try {
       const j = await famApi('GET', '/f/' + code + '/players');
       if (code !== Fam.code) return;
-      Fam.players = Array.isArray(j.players) ? j.players : [];
-      applyPending();
+      Fam.raw = Array.isArray(j.players) ? j.players : [];
       Fam.live = true;
-      store.set('cache.' + code, Fam.players);
-      if (Fam.pid && !Fam.me()) { Fam.pid = null; store.set('player.' + code, null); }
+      famStore();
+      for (const id of Object.keys(Fam.toks)) if (!Fam.raw.some(p => p.id === id)) setTok(id, null);
+      if (Fam.pid && !Fam.raw.some(p => p.id === Fam.pid)) famPick(null);
     } catch (e) {
       if (code !== Fam.code) return;
       if (e.status === 404) { famForget('That family board no longer exists. You can make a new one.'); return; }
       Fam.live = false;
     }
+    famView();
   }
   famSync();
   if (Fam.code && !document.hidden && (!famScreen.hidden || !titleScreen.hidden)) famTimer = setTimeout(famRefresh, 15000);
 }
-function famSet(code) {
-  Fam.code = code; store.set('family', code);
-  Fam.pid = store.get('player.' + code, null);
-  Fam.players = store.get('cache.' + code, []) || [];
-  Fam.live = false; Fam.note = '';
-  Fam.adding = false;
-}
 function famForget(note) {
-  if (Fam.code) { store.set('cache.' + Fam.code, null); }
+  if (Fam.code) { store.set('cache.' + Fam.code, null); store.set('toks.' + Fam.code, null); store.set('player.' + Fam.code, null); }
   pendingQ = pendingQ.filter(q => q.code !== Fam.code); savePending();
-  Fam.code = null; Fam.pid = null; Fam.players = []; Fam.live = false; Fam.adding = false; Fam.note = note || '';
+  Fam.code = null; Fam.pid = null; Fam.raw = []; Fam.players = []; Fam.toks = {}; Fam.live = false;
+  Fam.adding = false; Fam.pinFor = null; Fam.note = note || '';
   store.set('family', null);
   famSync();
 }
 function famPick(id) {
   Fam.pid = id; store.set('player.' + Fam.code, id);
+  if (id) Fam.lockedOut = '';
   famSync();
 }
+/* every finished game counts; the server keeps it as the best run if it beats the old one */
 function famRecord(st) {
   const me = Fam.me();
-  if (!me || st.score <= Fam.best(me, st.board)) return;
-  pendingQ.push({ code: Fam.code, pid: me.id, board: st.board, s: st.score, sp: st.speed, lv: st.level, len: Math.min(10000, st.snake.length), at: Date.now() });
-  savePending(); applyPending(); store.set('cache.' + Fam.code, Fam.players);
+  if (!me) return;
+  pendingQ.push({ code: Fam.code, pid: me.id, board: st.board, sp: st.speed, s: st.score, lv: Math.min(999, st.level), len: Math.min(10000, st.snake.length), at: Date.now() });
+  savePending(); famView();
   famFlush();
 }
 async function famFlush() {
   if (Fam.flushing) return;
   Fam.flushing = true;
-  let sent = false;
+  let sent = false, lost = null;
   try {
     while (pendingQ.length) {
       const q = pendingQ[0];
-      try { await famApi('POST', '/f/' + q.code + '/players/' + q.pid + '/scores', { board: q.board, score: q.s, speed: q.sp, level: q.lv, len: q.len }); sent = true; }
-      catch (e) { if (e.status === 0 || e.status === 429 || e.status >= 500) break; }
+      const token = q.code === Fam.code ? Fam.toks[q.pid] : tokensOf(q.code)[q.pid];
+      if (token) {
+        try {
+          await famApi('POST', '/f/' + q.code + '/players/' + q.pid + '/games', { board: q.board, speed: q.sp, score: q.s, level: q.lv, len: q.len }, token);
+          sent = true;
+        } catch (e) {
+          if (e.status === 0 || e.status === 429 || e.status >= 500) break;
+          if (e.status === 401 && q.code === Fam.code) { setTok(q.pid, null); lost = q.pid; }
+        }
+      }
       pendingQ.shift(); savePending();
     }
   } finally { Fam.flushing = false; }
+  if (lost) { const p = Fam.raw.find(x => x.id === lost); Fam.lockedOut = p ? p.n : 'This player'; famSync(); }
   if (sent && Fam.code) famRefresh();
 }
 function famSay(t) { famMsg.textContent = t || ''; }
@@ -1912,13 +1972,15 @@ function famWho() {
 function famOverLine() {
   const el = $('#overFam'), me = Fam.me();
   $('#overFamBtn').hidden = !Fam.code;
+  if (!me && Fam.lockedOut && S && !S.demo) { el.textContent = Fam.lockedOut + "'s PIN was changed on another device, so this game was not counted. Enter the new PIN in Family board."; el.hidden = false; return; }
   if (!me || !S || S.demo) { el.hidden = true; return; }
   const ranked = rankedFor(S.board), i = ranked.findIndex(p => p.id === me.id), bn = BOARDS[S.board].name;
-  if (i < 0) { el.hidden = true; return; }
+  const n = Fam.games(me, S.board), games = n > 0 ? ' · game ' + n + ' on ' + bn : '';
+  if (i < 0) { el.textContent = me.n + games.replace(' · ', ': '); el.hidden = !n; return; }
   const top = ranked[0];
-  el.textContent = i === 0
+  el.textContent = (i === 0
     ? (ranked.length > 1 ? me.n + ' holds the family record on ' + bn + ': ' + Fam.best(me, S.board) : me.n + "'s best on " + bn + ': ' + Fam.best(me, S.board))
-    : me.n + ' is #' + (i + 1) + ' of ' + ranked.length + ' on ' + bn + ' · ' + top.n + ' leads with ' + Fam.best(top, S.board);
+    : me.n + ' is #' + (i + 1) + ' of ' + ranked.length + ' on ' + bn + ' · ' + top.n + ' leads with ' + Fam.best(top, S.board)) + games;
   el.hidden = false;
 }
 function famBuild() {
@@ -1935,50 +1997,92 @@ function famBuild() {
     sw.appendChild(b);
   });
 }
+function avatar(p, cls) {
+  const av = document.createElement('span'); av.className = 'av ' + (cls || 'sm');
+  av.style.setProperty('--pc', pc(p)); av.textContent = initial(p.n);
+  return av;
+}
 function famRender() {
   if (famScreen.hidden) return;
   const has = !!Fam.code, me = Fam.me();
   $('#famSetup').hidden = has; $('#famMain').hidden = !has;
   if (!has) return;
   $('#famCodeTxt').textContent = prettyCode(Fam.code);
+  // who's playing
   const list = $('#famPlayers'); list.textContent = '';
   for (const p of Fam.players) {
     const b = document.createElement('button'); b.type = 'button'; b.className = 'pl'; b.dataset.pid = p.id;
-    b.setAttribute('aria-pressed', String(p.id === Fam.pid)); b.style.setProperty('--pc', pc(p));
-    const av = document.createElement('span'); av.className = 'av sm'; av.textContent = initial(p.n);
+    b.setAttribute('aria-pressed', String(!!me && p.id === me.id)); b.style.setProperty('--pc', pc(p));
     const nm = document.createElement('span'); nm.textContent = p.n;
-    b.append(av, nm); list.appendChild(b);
+    b.append(avatar(p), nm);
+    if (!Fam.toks[p.id]) { const lock = document.createElement('i'); lock.className = 'lock'; lock.setAttribute('aria-label', 'needs PIN'); b.appendChild(lock); }
+    list.appendChild(b);
   }
-  if (!Fam.adding && Fam.players.length < MAX_PLAYERS) {
+  if (!Fam.adding && !Fam.pinFor && Fam.players.length < MAX_PLAYERS) {
     const b = document.createElement('button'); b.type = 'button'; b.className = 'pl add'; b.id = 'famAddBtn'; b.textContent = '+ Add player';
     list.appendChild(b);
   }
   $('#famAdd').hidden = !Fam.adding;
   document.querySelectorAll('#famColors .sw').forEach(b => b.setAttribute('aria-checked', String(+b.dataset.c === Fam.colour)));
-  const rm = $('#famRemove');
-  rm.hidden = !me;
+  // PIN prompt
+  const pf = Fam.pinFor, pp = pf && Fam.players.find(p => p.id === pf.id);
+  $('#famPin').hidden = !pp;
+  if (pp) {
+    $('#famPinLbl').textContent = pf.mode === 'unlock' ? pp.n + "'s PIN" : pf.mode === 'set' ? 'Choose a PIN for ' + pp.n : 'New PIN for ' + pp.n;
+    $('#famPinHint').textContent = pf.mode === 'unlock' ? 'Needed once on this device.'
+      : pf.mode === 'set' ? pp.n + ' was added before PINs. Pick 4 digits: every device will need them to play as ' + pp.n + '.'
+      : 'Other devices will need the new PIN.';
+    $('#famPinOk').textContent = pf.mode === 'unlock' ? 'Unlock' : 'Save PIN';
+  }
+  // player actions
+  const rm = $('#famRemove'), ch = $('#famChPin');
+  rm.hidden = ch.hidden = !me;
   if (me && !rm.dataset.sure) rm.textContent = 'Remove ' + me.n;
+  // best scores on the chosen board
   document.querySelectorAll('#famTabs .tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.board === Fam.tab)));
+  const bn = BOARDS[Fam.tab].name;
   const ol = $('#famRanks'); ol.textContent = '';
   const ranked = rankedFor(Fam.tab);
   if (!ranked.length) {
     const li = document.createElement('li'); li.className = 'empty';
-    li.textContent = Fam.players.length ? 'No scores on ' + BOARDS[Fam.tab].name + ' yet.' : 'Add a player to start the board.';
+    li.textContent = Fam.players.length ? 'No scores on ' + bn + ' yet.' : 'Add a player to start the board.';
     ol.appendChild(li);
   }
   ranked.forEach((p, i) => {
     const r = p.b[Fam.tab], li = document.createElement('li');
-    if (p.id === Fam.pid) li.className = 'me';
+    if (me && p.id === me.id) li.className = 'me';
     li.style.setProperty('--pc', pc(p));
     const rk = document.createElement('span'); rk.className = 'rk'; rk.textContent = i + 1;
-    const av = document.createElement('span'); av.className = 'av sm'; av.style.setProperty('--pc', pc(p)); av.textContent = initial(p.n);
     const nm = document.createElement('span'); nm.className = 'nm';
     const b = document.createElement('b'); b.textContent = p.n;
     const sm = document.createElement('small'); sm.textContent = 'Speed ' + r.sp + ' · level ' + r.lv + ' · ' + ago(r.at);
     nm.append(b, sm);
     const sc = document.createElement('span'); sc.className = 'sc'; sc.textContent = r.s;
-    li.append(rk, av, nm, sc); ol.appendChild(li);
+    li.append(rk, avatar(p), nm, sc); ol.appendChild(li);
   });
+  // games played on the chosen board, by starting speed
+  $('#famGamesLbl').textContent = 'Games on ' + bn + ' by starting speed';
+  const rows = Fam.players.filter(p => Fam.games(p, Fam.tab) > 0);
+  const tbl = $('#famGames'); tbl.textContent = '';
+  $('#famGamesWrap').hidden = !rows.length; $('#famGamesEmpty').hidden = !!rows.length;
+  $('#famGamesEmpty').textContent = 'No games on ' + bn + ' yet.';
+  if (rows.length) {
+    const thead = tbl.createTHead(), hr = thead.insertRow();
+    const corner = document.createElement('th'); corner.scope = 'col'; corner.textContent = 'Player'; hr.appendChild(corner);
+    for (let s = 1; s <= 9; s++) { const th = document.createElement('th'); th.scope = 'col'; th.textContent = s; hr.appendChild(th); }
+    const all = document.createElement('th'); all.scope = 'col'; all.textContent = 'All'; hr.appendChild(all);
+    const tb = tbl.createTBody();
+    for (const p of rows) {
+      const tr = tb.insertRow(); if (me && p.id === me.id) tr.className = 'me';
+      const th = document.createElement('th'); th.scope = 'row';
+      const wrapEl = document.createElement('span'); wrapEl.className = 'nmc';
+      const nm = document.createElement('b'); nm.textContent = p.n;
+      wrapEl.append(avatar(p, 'xs'), nm); th.appendChild(wrapEl); tr.appendChild(th);
+      const g = p.g[Fam.tab] || {};
+      for (let s = 1; s <= 9; s++) { const td = tr.insertCell(); const n = g[s] | 0; td.textContent = n || '·'; if (!n) td.className = 'z'; }
+      const tot = tr.insertCell(); tot.className = 't'; tot.textContent = Fam.games(p, Fam.tab);
+    }
+  }
   $('#famSync').textContent = Fam.live ? '' : 'Offline · saved scores';
 }
 function famSync() {
@@ -1991,6 +2095,7 @@ function famSync() {
 function openFam(tab) {
   Fam.back = !overScreen.hidden ? overScreen : titleScreen;
   Fam.tab = BOARDS[tab] ? tab : cfg.board;
+  Fam.pinFor = null;
   Fam.adding = !!Fam.code && !Fam.players.length;
   famSay(Fam.code ? '' : Fam.note);
   show(famScreen); famScreen.scrollTop = 0;
@@ -1998,8 +2103,8 @@ function openFam(tab) {
   famRefresh();
 }
 function closeFam() {
-  const back = Fam.back || titleScreen; Fam.back = null; Fam.adding = false;
-  delete $('#famLeave').dataset.sure; delete $('#famRemove').dataset.sure;
+  const back = Fam.back || titleScreen; Fam.back = null; Fam.adding = false; Fam.pinFor = null;
+  for (const id of ['#famLeave', '#famRemove']) delete $(id).dataset.sure;
   $('#famLeave').textContent = 'Leave board';
   show(back);
   if (back === overScreen) famOverLine(); else { syncPickers(); famWho(); }
@@ -2028,9 +2133,9 @@ async function famJoin(btn) {
   btn.disabled = true; famSay('Checking…');
   try {
     const j = await famApi('GET', '/f/' + c + '/players');
-    famSet(c); Fam.players = j.players || []; Fam.live = true; store.set('cache.' + c, Fam.players);
+    famSet(c); Fam.raw = j.players || []; Fam.live = true; famStore(); famView();
     Fam.adding = !Fam.players.length;
-    famSay(Fam.players.length ? 'Joined. Tap your name to play as you.' : '');
+    famSay(Fam.players.length ? 'Joined. Tap your name and enter your PIN.' : '');
     $('#famCode').value = '';
     famSync();
   } catch (e) {
@@ -2038,38 +2143,74 @@ async function famJoin(btn) {
   } finally { btn.disabled = false; }
 }
 async function famSaveNew(btn) {
-  const input = $('#famName'), name = input.value.replace(/\s+/g, ' ').trim();
+  const input = $('#famName'), name = input.value.replace(/\s+/g, ' ').trim(), pin = $('#famNewPin').value.trim();
   if (!name) { famSay('Type a name first.'); input.focus(); return; }
   if (Fam.players.some(p => p.n.toLowerCase() === name.toLowerCase())) { famSay(name + ' is already on the board. Tap the name to play as them.'); return; }
+  if (!PIN_RE.test(pin)) { famSay('The PIN is 4 digits.'); $('#famNewPin').focus(); return; }
   const bytes = crypto.getRandomValues(new Uint8Array(12)), abc = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   const id = Array.from(bytes, b => abc[b % abc.length]).join('');
   btn.disabled = true; famSay('Saving…');
   try {
-    await famApi('PUT', '/f/' + Fam.code + '/players/' + id, { name, colour: Fam.colour });
-    Fam.players.push({ id, n: name, c: Fam.colour, b: {} });
-    store.set('cache.' + Fam.code, Fam.players);
-    input.value = ''; Fam.adding = false; famSay('');
+    const j = await famApi('PUT', '/f/' + Fam.code + '/players/' + id, { name, colour: Fam.colour, pin });
+    setTok(id, j.token);
+    Fam.raw.push({ id, n: name, c: Fam.colour, pin: true, b: {}, g: {} }); famStore(); famView();
+    input.value = ''; $('#famNewPin').value = ''; Fam.adding = false;
+    famSay('Remember the PIN: ' + name + ' needs it on every other device.');
     famPick(id);
     famRefresh();
   } catch (e) {
     famSay(e.status === 409 ? 'The board is full (12 players).' : e.status === 0 ? 'You are offline. Adding a player needs a connection.' : 'Could not add the player. Try again.');
   } finally { btn.disabled = false; }
 }
+function famChoose(id) {
+  const p = Fam.players.find(x => x.id === id); if (!p) return;
+  if (Fam.toks[id]) { Fam.pinFor = null; famPick(id); famSay(''); return; }
+  Fam.adding = false; Fam.pinFor = { id, mode: p.pin ? 'unlock' : 'set' };
+  famSay(''); famRender();
+  const inp = $('#famPinIn'); inp.value = ''; inp.focus();
+}
+async function famPinSubmit(btn) {
+  const pf = Fam.pinFor; if (!pf) return;
+  const pin = $('#famPinIn').value.trim();
+  if (!PIN_RE.test(pin)) { famSay('The PIN is 4 digits.'); return; }
+  const p = Fam.players.find(x => x.id === pf.id); if (!p) { Fam.pinFor = null; famRender(); return; }
+  btn.disabled = true; famSay('Checking…');
+  try {
+    if (pf.mode === 'change') {
+      await famApi('POST', '/f/' + Fam.code + '/players/' + pf.id + '/pin', { pin }, Fam.toks[pf.id]);
+      famSay('PIN changed. Other devices need the new PIN to play as ' + p.n + '.');
+    } else {
+      const j = await famApi('POST', '/f/' + Fam.code + '/players/' + pf.id + '/unlock', { pin });
+      setTok(pf.id, j.token);
+      famSay(j.set ? 'PIN saved. ' + p.n + ' needs it on every other device.' : '');
+      famPick(pf.id);
+    }
+    Fam.pinFor = null; $('#famPinIn').value = '';
+    famRefresh();
+  } catch (e) {
+    $('#famPinIn').value = '';
+    famSay(e.status === 403 ? 'Wrong PIN. Try again.' : e.status === 429 ? 'Too many wrong PINs. Wait 15 minutes and try again.'
+      : e.status === 401 ? 'This device needs ' + p.n + "'s current PIN first." : e.status === 0 ? 'You are offline. The PIN needs a connection.' : 'Could not check the PIN. Try again.');
+    if (e.status === 401) { setTok(pf.id, null); Fam.pinFor = { id: pf.id, mode: 'unlock' }; famPick(null); }
+  } finally { btn.disabled = false; famRender(); }
+}
 async function famRemove(btn) {
   const me = Fam.me(); if (!me) return;
-  if (!famSure(btn, () => 'Remove ' + (Fam.me() ? Fam.me().n : 'player'), 'Remove ' + me.n + ' and their scores? Tap again')) return;
+  if (!famSure(btn, () => 'Remove ' + (Fam.me() ? Fam.me().n : 'player'), 'Remove ' + me.n + ', their scores and games? Tap again')) return;
   delete btn.dataset.sure;
   btn.disabled = true;
   try {
-    await famApi('DELETE', '/f/' + Fam.code + '/players/' + me.id);
-    Fam.players = Fam.players.filter(p => p.id !== me.id);
+    await famApi('DELETE', '/f/' + Fam.code + '/players/' + me.id, null, Fam.toks[me.id]);
+    Fam.raw = Fam.raw.filter(p => p.id !== me.id); famStore();
     pendingQ = pendingQ.filter(q => q.pid !== me.id); savePending();
-    store.set('cache.' + Fam.code, Fam.players);
+    setTok(me.id, null); famView();
     famPick(null); famSay(me.n + ' was removed.');
-  } catch (e) { famSay('Could not remove the player. Check the connection.'); }
-  finally { btn.disabled = false; }
+  } catch (e) {
+    famSay(e.status === 401 ? 'This device needs ' + me.n + "'s PIN again." : 'Could not remove the player. Check the connection.');
+    if (e.status === 401) { setTok(me.id, null); famPick(null); }
+  } finally { btn.disabled = false; }
 }
-async function famShare(btn) {
+async function famShare() {
   const url = location.origin + '/?family=' + Fam.code;
   const text = 'Sidewinder family board. Open the link on the other device, or type the code ' + prettyCode(Fam.code);
   try { if (navigator.share) { await navigator.share({ title: 'Sidewinder', text, url }); return; } }
@@ -2086,14 +2227,22 @@ function famWire() {
   $('#famCode').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); famJoin($('#famJoin')); } });
   $('#famPlayers').addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b) return;
-    if (b.id === 'famAddBtn') { Fam.adding = true; Fam.colour = Fam.players.length % P_COLORS.length; famSay(''); famRender(); $('#famName').focus(); return; }
-    if (b.dataset.pid) { famPick(b.dataset.pid); famSay(''); }
+    if (b.id === 'famAddBtn') { Fam.adding = true; Fam.pinFor = null; Fam.colour = Fam.players.length % P_COLORS.length; famSay(''); famRender(); $('#famName').focus(); return; }
+    if (b.dataset.pid) famChoose(b.dataset.pid);
   });
   $('#famColors').addEventListener('click', e => { const b = e.target.closest('.sw'); if (!b) return; Fam.colour = +b.dataset.c; famRender(); });
   $('#famAdd').addEventListener('submit', e => { e.preventDefault(); famSaveNew($('#famSave')); });
-  $('#famCancel').addEventListener('click', () => { Fam.adding = false; $('#famName').value = ''; famSay(''); famRender(); });
+  $('#famCancel').addEventListener('click', () => { Fam.adding = false; $('#famName').value = ''; $('#famNewPin').value = ''; famSay(''); famRender(); });
+  $('#famPin').addEventListener('submit', e => { e.preventDefault(); famPinSubmit($('#famPinOk')); });
+  $('#famPinCancel').addEventListener('click', () => { Fam.pinFor = null; $('#famPinIn').value = ''; famSay(''); famRender(); });
+  for (const id of ['#famNewPin', '#famPinIn']) $(id).addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4); });
   $('#famTabs').addEventListener('click', e => { const b = e.target.closest('.tab'); if (!b) return; Fam.tab = b.dataset.board; famRender(); });
-  $('#famShare').addEventListener('click', e => famShare(e.currentTarget));
+  $('#famShare').addEventListener('click', famShare);
+  $('#famChPin').addEventListener('click', () => {
+    const me = Fam.me(); if (!me) return;
+    Fam.adding = false; Fam.pinFor = { id: me.id, mode: 'change' }; famSay(''); famRender();
+    const inp = $('#famPinIn'); inp.value = ''; inp.focus();
+  });
   $('#famRemove').addEventListener('click', e => famRemove(e.currentTarget));
   $('#famLeave').addEventListener('click', e => {
     if (!famSure(e.currentTarget, () => 'Leave board', 'Leave on this device? Scores stay on the board. Tap again')) return;
