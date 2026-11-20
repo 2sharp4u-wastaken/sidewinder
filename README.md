@@ -46,7 +46,9 @@ wrangler.jsonc     הגדרות Cloudflare
 2. Framework preset: **None**. Build command: ריק. Deploy command: `npx wrangler deploy`.
 3. בפריסה הראשונה Wrangler יוצר לבד את מסד הנתונים `sidewinder-db`, והטבלאות נוצרות בבקשה הראשונה.
 
-מכאן כל דחיפה ל-`main` מתפרסמת אוטומטית ל-`sidewinder.<account>.workers.dev`.
+הכתובת: https://sidewinder.2sharp4u.workers.dev
+
+**אם דחיפה ל-`main` לא מפעילה בנייה** (קרה בנובמבר 2026, כנראה כי לאפליקציית Cloudflare ב-GitHub אין גישה לריפו): ב-Cloudflare, sidewinder ← Settings ← Deploy Hooks יש hook בשם `claude-deploy` שבונה את `main`. בקשת POST לכתובת שלו מפעילה בנייה. התיקון הקבוע: ב-GitHub, Settings ← Applications ← Cloudflare Workers and Pages ← Configure, ולהוסיף את `sidewinder`.
 
 ## פיתוח מקומי
 
