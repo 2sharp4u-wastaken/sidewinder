@@ -1,0 +1,19 @@
+{
+  // Cloudflare Worker: serves ./public and the family-board API (worker/index.js).
+  // Connect this repo in the Cloudflare dashboard (Workers & Pages → Create → Workers →
+  // Connect to Git), framework preset "None", deploy command `npx wrangler deploy`.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "sidewinder",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-06-01",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
+  // No database_id on purpose: Wrangler creates the D1 database on the first deploy
+  // (automatic resource provisioning). The worker creates its tables on first use.
+  "d1_databases": [
+    { "binding": "DB", "database_name": "sidewinder-db" }
+  ],
+  "observability": { "enabled": true }
+}
