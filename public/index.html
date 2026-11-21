@@ -155,9 +155,10 @@ button{font:inherit;color:inherit}
 .speed-desc b{color:var(--sand);font-weight:600}
 .legend-head{margin:4px 0 0;font:600 11px/1 var(--ui);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
 body.ov .hud,body.ov .strip,body.ov .pad{visibility:hidden}
-/* Family board: player picker, leaderboard, setup */
+/* Family boards: player picker, leaderboard, setup */
 input{-webkit-user-select:text;user-select:text}
-.who-btn{display:flex;align-items:center;gap:12px;width:100%;padding:11px 14px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--ink);cursor:pointer;text-align:left;touch-action:manipulation}
+.who{display:flex;gap:8px;align-items:stretch}
+.who-btn{flex:1;min-width:0;display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--ink);cursor:pointer;text-align:left;touch-action:manipulation}
 .who-btn:hover{background:rgba(255,255,255,.08)}
 .who-btn.need{border-color:var(--sand);box-shadow:0 0 0 1px var(--sand)}
 .who-btn:focus-visible{outline:2px solid var(--sand);outline-offset:2px}
@@ -165,25 +166,40 @@ input{-webkit-user-select:text;user-select:text}
 .who-ic svg{width:24px;height:24px}
 .who-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
 .who-txt b{font:600 17px/1.15 var(--ui);color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.who-txt .lbl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .who-go{flex:none;font:700 12px/1 var(--ui);letter-spacing:.12em;text-transform:uppercase;color:var(--sand)}
+.who-sw{flex:none;padding-inline:16px}
 .av{width:32px;height:32px;flex:none;border-radius:50%;background:var(--pc,var(--amber));color:#1a1020;display:grid;place-items:center;font:400 14px/1 var(--display);box-shadow:inset 0 -3px 0 rgba(0,0,0,.22)}
 .av.sm{width:26px;height:26px;font-size:12px}
+.av.xs{width:20px;height:20px;font-size:10px;box-shadow:none}
 .fam-sec{display:flex;flex-direction:column;gap:10px}
-.players{display:flex;flex-wrap:wrap;gap:8px}
+.chips-row,.players{display:flex;flex-wrap:wrap;gap:8px}
+.bd{padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--ink);font:600 15px/1 var(--ui);cursor:pointer;touch-action:manipulation;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bd[aria-pressed="true"]{background:var(--sand);border-color:transparent;color:#2a1406}
+.bd.add{color:var(--sand);border-style:dashed}
 .pl{--pc:var(--amber);display:flex;align-items:center;gap:8px;max-width:100%;padding:5px 14px 5px 5px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04);cursor:pointer;touch-action:manipulation;font:600 16px/1 var(--ui);color:var(--ink)}
-.pl span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pl span:not(.av){overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pl small{font:700 10px/1 var(--ui);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .pl:hover{background:rgba(255,255,255,.08)}
 .pl[aria-pressed="true"]{border-color:var(--pc);box-shadow:0 0 0 1px var(--pc);background:rgba(255,255,255,.1)}
 .pl.add{padding:5px 16px;min-height:38px;color:var(--sand);border-style:dashed}
-.pl:focus-visible,.tab:focus-visible,.sw:focus-visible,.btn.sm:focus-visible{outline:2px solid var(--sand);outline-offset:2px}
+.pl.bring{border-style:dashed;border-color:var(--pc)}
+.pl .lock{width:12px;height:12px;flex:none;margin-left:-2px;opacity:.7;background:var(--muted);-webkit-mask:var(--lock) center/contain no-repeat;mask:var(--lock) center/contain no-repeat}
+:root{--lock:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 10V7a5 5 0 0 1 10 0v3h1a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1zm2 0h6V7a3 3 0 0 0-6 0z'/%3E%3C/svg%3E")}
+.pl:focus-visible,.bd:focus-visible,.tab:focus-visible,.sw:focus-visible,.btn.sm:focus-visible{outline:2px solid var(--sand);outline-offset:2px}
 .add-form{display:flex;flex-direction:column;gap:12px;padding:14px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.03)}
 .field{width:100%;min-width:0;font:600 18px/1.1 var(--ui);padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:rgba(0,0,0,.28);color:var(--ink)}
 .field::placeholder{color:var(--muted);opacity:.8}
 .field:focus{outline:2px solid var(--sand);outline-offset:1px}
+.field.pin{max-width:200px;font:400 24px/1 var(--display);letter-spacing:.4em;text-align:center}
+.check{display:flex;align-items:center;gap:10px;font:600 15px/1.3 var(--ui);color:var(--ink);cursor:pointer}
+.check input{width:20px;height:20px;accent-color:var(--amber)}
 .swatches{display:flex;flex-wrap:wrap;gap:8px}
 .sw{--pc:var(--amber);width:34px;height:34px;padding:0;border-radius:50%;border:3px solid transparent;background:var(--pc);background-clip:padding-box;cursor:pointer;touch-action:manipulation}
 .sw[aria-checked="true"]{border-color:var(--ink)}
 .btn.sm{font:600 15px/1 var(--ui);letter-spacing:.02em;padding:11px 14px;border-radius:12px}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--muted)}
+.btn.warn{color:#ff8fb8;border-color:rgba(255,79,154,.35)}
 .btn:disabled{opacity:.55;cursor:default}
 .tabs{display:flex;flex-wrap:wrap;gap:6px}
 .tab{padding:8px 11px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--muted);font:700 12px/1 var(--ui);letter-spacing:.1em;text-transform:uppercase;cursor:pointer;touch-action:manipulation}
@@ -200,16 +216,6 @@ input{-webkit-user-select:text;user-select:text}
 .nm b{font:600 16px/1.1 var(--ui);color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .nm small{font-size:12.5px;line-height:1.2;color:var(--muted)}
 .sc{font:400 19px/1 var(--display);color:var(--sand);font-variant-numeric:tabular-nums}
-.join-row{display:flex;gap:8px}
-.join-row .field{flex:1;font:400 17px/1 var(--display);letter-spacing:.12em;text-transform:uppercase}
-.fam-foot{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding-top:4px;border-top:1px solid var(--line)}
-.fam-foot .fine{flex:1 1 100%;padding-top:10px}
-.msg{min-height:1.4em;margin:0;font:600 14px/1.35 var(--ui);color:var(--sand)}
-.msg:empty{display:none}
-.fam-line{margin:0;font:600 16px/1.35 var(--ui);color:var(--sand)}
-.av.xs{width:20px;height:20px;font-size:10px;box-shadow:none}
-.pl .lock{width:12px;height:12px;flex:none;margin-left:-2px;opacity:.7;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 10V7a5 5 0 0 1 10 0v3h1a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1zm2 0h6V7a3 3 0 0 0-6 0z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 10V7a5 5 0 0 1 10 0v3h1a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1zm2 0h6V7a3 3 0 0 0-6 0z'/%3E%3C/svg%3E") center/contain no-repeat;color:var(--muted)}
-.field.pin{max-width:200px;font:400 24px/1 var(--display);letter-spacing:.4em;text-align:center}
 .gtab-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.03)}
 .gtab{width:100%;border-collapse:collapse;font:600 14px/1 var(--ui);font-variant-numeric:tabular-nums}
 .gtab th,.gtab td{padding:9px 3px;text-align:center;white-space:nowrap}
@@ -224,6 +230,20 @@ input{-webkit-user-select:text;user-select:text}
 .gtab td.t,.gtab thead th:last-child{padding-right:10px}
 .gtab td.t{font:400 15px/1 var(--display);color:var(--sand)}
 .gtab tbody tr+tr>*{border-top:1px solid rgba(236,200,142,.08)}
+.manage{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.manage li{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.03)}
+.manage .who-n{flex:1 1 120px;min-width:0;display:flex;align-items:center;gap:8px;font:600 16px/1.1 var(--ui)}
+.manage .who-n b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.manage .acts{display:flex;flex-wrap:wrap;gap:6px}
+.manage .btn.sm{padding:9px 11px;font-size:14px}
+.tag.parent{color:var(--c-double);border-color:rgba(255,225,77,.4)}
+.join-row{display:flex;gap:8px}
+.join-row .field{flex:1;font:400 17px/1 var(--display);letter-spacing:.12em;text-transform:uppercase}
+.fam-foot{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding-top:4px;border-top:1px solid var(--line)}
+.fam-foot .fine{flex:1 1 100%;padding-top:10px}
+.msg{min-height:1.4em;margin:0;font:600 14px/1.35 var(--ui);color:var(--sand)}
+.msg:empty{display:none}
+.fam-line{margin:0;font:600 16px/1.35 var(--ui);color:var(--sand)}
 @media (prefers-reduced-motion:reduce){.hint,.chip.warn{animation:none}}
 </style>
 </head>
@@ -291,7 +311,7 @@ input{-webkit-user-select:text;user-select:text}
       <div class="speeds" id="speeds" role="radiogroup" aria-labelledby="speedLbl"></div>
       <p class="speed-desc" id="speedDesc"></p>
     </div>
-    <button class="who-btn" id="whoBtn" type="button"><span class="who-ic" id="whoIc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v4a5 5 0 0 1-10 0z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3M12 13v4M8 20h8M9.5 17h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="av" id="whoAv" hidden></span><span class="who-txt"><span class="lbl" id="whoLbl">Family leaderboard</span><b id="whoName">Keep best scores on every device</b></span><span class="who-go" id="whoGo">Set up</span></button>
+    <div class="who"><button class="who-btn" id="whoBtn" type="button"><span class="who-ic" id="whoIc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v4a5 5 0 0 1-10 0z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3M12 13v4M8 20h8M9.5 17h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="av" id="whoAv" hidden></span><span class="who-txt"><span class="lbl" id="whoLbl">Family leaderboard</span><b id="whoName">Keep best scores on every device</b></span><span class="who-go" id="whoGo">Set up</span></button><button class="btn sm who-sw" id="switchBtn" type="button" hidden>Switch</button></div>
     <button class="btn primary" id="playBtn" type="button">Play</button>
     <p class="fine" id="controlsHint"></p>
     <p class="legend-head">Power-ups and bonus</p>
@@ -328,7 +348,8 @@ input{-webkit-user-select:text;user-select:text}
     </dl>
     <div class="row">
       <button class="btn primary" id="againBtn" type="button">Play again</button>
-      <button class="btn" id="overFamBtn" type="button" hidden>Family board</button>
+      <button class="btn" id="overFamBtn" type="button" hidden>Scores</button>
+      <button class="btn" id="overSwitch" type="button" hidden>Switch player</button>
       <button class="btn" id="menuBtn" type="button">Menu</button>
     </div>
   </div>
@@ -336,17 +357,34 @@ input{-webkit-user-select:text;user-select:text}
 
 <section class="overlay" id="famScreen" aria-labelledby="famTitle" hidden>
   <div class="panel">
-    <h2 class="big" id="famTitle">Family board</h2>
-    <div class="fam-sec" id="famSetup">
-      <p class="lede">One leaderboard for every phone, tablet and computer at home. Each player picks their name once, and their best scores follow them to any device that joins with the family code.</p>
-      <button class="btn primary" id="famNew" type="button">Create a family board</button>
-      <label class="lbl" for="famCode">Already made one on another device?</label>
-      <div class="join-row"><input class="field" id="famCode" type="text" inputmode="text" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ABCD-2345"><button class="btn sm" id="famJoin" type="button">Join</button></div>
-      <p class="fine">Without a family board, best scores stay on this device only.</p>
+    <div class="fam-sec">
+      <h2 class="big" id="famTitle">Family board</h2>
+      <div class="chips-row" id="famBoards" hidden></div>
     </div>
+
+    <form class="add-form" id="famCreate" hidden>
+      <label class="lbl" for="famBoardName">Name of the new board</label>
+      <input class="field" id="famBoardName" type="text" maxlength="24" autocomplete="off" spellcheck="false" placeholder="Family board">
+      <label class="check" id="famBringRow" hidden><input type="checkbox" id="famBring" checked><span id="famBringTxt">Bring my scores</span></label>
+      <p class="fine" id="famCreateHint"></p>
+      <div class="row"><button class="btn primary" id="famCreateOk" type="submit">Create board</button><button class="btn" id="famCreateCancel" type="button">Cancel</button></div>
+    </form>
+    <form class="add-form" id="famJoinForm" hidden>
+      <label class="lbl" for="famCode">Code of the board</label>
+      <div class="join-row"><input class="field" id="famCode" type="text" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ABCD-2345"><button class="btn sm" id="famJoin" type="submit">Join</button></div>
+      <button class="btn sm ghost" id="famJoinCancel" type="button">Cancel</button>
+    </form>
+
+    <div class="fam-sec" id="famSetup">
+      <p class="lede">One leaderboard for every phone, tablet and computer at home. Each player has a name and a 4-digit PIN, and their best scores follow them to every device on the board.</p>
+      <button class="btn primary" id="famNew" type="button">Create a family board</button>
+      <button class="btn" id="famJoinOpen" type="button">Join with a code</button>
+      <p class="fine">Without a board, best scores stay on this device only.</p>
+    </div>
+
     <div class="fam-sec" id="famMain" hidden>
       <div class="fam-sec">
-        <span class="lbl">Who's playing on this device</span>
+        <span class="lbl" id="famWhoLbl">Who's playing on this device</span>
         <div class="players" id="famPlayers"></div>
         <form class="add-form" id="famAdd" hidden>
           <label class="lbl" for="famName">New player</label>
@@ -354,7 +392,7 @@ input{-webkit-user-select:text;user-select:text}
           <div class="swatches" id="famColors" role="radiogroup" aria-label="Colour"></div>
           <label class="lbl" for="famNewPin">4-digit PIN</label>
           <input class="field pin" id="famNewPin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="new-password" placeholder="0000">
-          <p class="fine">Needed once on each device to play as this player.</p>
+          <p class="fine" id="famAddHint">The PIN is needed on each device, and every time someone switches to this player.</p>
           <div class="row"><button class="btn primary" id="famSave" type="submit">Add player</button><button class="btn" id="famCancel" type="button">Cancel</button></div>
         </form>
         <form class="add-form" id="famPin" hidden>
@@ -374,12 +412,16 @@ input{-webkit-user-select:text;user-select:text}
         <div class="gtab-wrap" id="famGamesWrap" hidden><table class="gtab" id="famGames"></table></div>
         <p class="fine" id="famGamesEmpty"></p>
       </div>
+      <div class="fam-sec" id="famManage" hidden>
+        <span class="lbl">Manage players · parents only</span>
+        <ul class="manage" id="famManageList"></ul>
+      </div>
       <div class="fam-foot">
-        <p class="fine">Family code <b id="famCodeTxt"></b>. Open the link on another device, or type the code there.</p>
-        <button class="btn sm" id="famShare" type="button">Add a device</button>
-        <button class="btn sm" id="famChPin" type="button" hidden>Change PIN</button>
-        <button class="btn sm" id="famRemove" type="button" hidden>Remove player</button>
-        <button class="btn sm" id="famLeave" type="button">Leave board</button>
+        <p class="fine">Board code <b id="famCodeTxt"></b>. Send the invite link to add a device or invite friends.</p>
+        <button class="btn sm" id="famShare" type="button">Invite</button>
+        <button class="btn sm" id="famChPin" type="button" hidden>Change my PIN</button>
+        <button class="btn sm" id="famSignOut" type="button" hidden>Sign out</button>
+        <button class="btn sm" id="famLeave" type="button">Remove board from this device</button>
       </div>
     </div>
     <p class="msg" id="famMsg" role="status" aria-live="polite"></p>
@@ -479,8 +521,8 @@ function localBest(b) {
   return bests[b];
 }
 function setLocalBest(b, v) { bests[b] = v; store.set('best.' + b, v); }
-/* With a family player picked, "best" is that player's best on the family board; otherwise this device's */
-function bestFor(b) { const me = Fam.me(); return me ? Fam.best(me, b) : localBest(b); }
+/* With a player signed in, "best" is that player's best on the board; otherwise this device's */
+function bestFor(b) { const me = Fam.personPlayer(); return me ? Fam.best(me, b) : localBest(b); }
 const cfg = { board: BOARDS[store.get('board', 'dunes')] ? store.get('board', 'dunes') : 'dunes', speed: clamp(store.get('speed', 1) | 0, 1, 9) };
 let newBest = false;
 const seen = new Set(store.get('seen', []));
@@ -1803,21 +1845,39 @@ function toast(title, body, color, ms) {
 }
 
 
-/* ---------- family board: one leaderboard for every device at home (API: worker/index.js) ----------
-   Each player has a 4-digit PIN. Entering it once on a device stores a token for that player on the device;
-   playing as the player, changing the PIN and removing the player all send that token. */
+/* ---------- family boards: shared leaderboards (API: worker/index.js) ----------
+   A device can be on several boards (the family's, one a kid made for friends) and shows one at a time.
+   One person plays on the device at a time. Switching to someone else needs their PIN and signs the previous
+   person out of this device. The same person can be on several boards: every game they finish counts on all of them.
+   Parents (whoever is first on a board, and anyone they promote) can remove players, reset a forgotten PIN
+   and make someone a parent. Anyone can add a player. */
 const CODE_RE = /^[A-HJ-NP-Z2-9]{8}$/;
 const PIN_RE = /^[0-9]{4}$/;
 const normCode = s => String(s || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
 const prettyCode = c => c ? c.slice(0, 4) + '-' + c.slice(4) : '';
 const P_COLORS = ['#f5a63b', '#5fe1e8', '#ff4f9a', '#93e26a', '#c4b2ff', '#ffe14d', '#6fa8ff', '#ff5f4a'];
 const MAX_PLAYERS = 12;
-const famScreen = $('#famScreen'), famMsg = $('#famMsg'), whoBtn = $('#whoBtn');
+const famScreen = $('#famScreen'), famMsg = $('#famMsg'), whoBtn = $('#whoBtn'), switchBtn = $('#switchBtn');
 const Fam = {
-  code: null, pid: null, raw: [], players: [], toks: {}, live: false, note: '', tab: 'dunes', back: null,
-  adding: false, colour: 0, pinFor: null, flushing: false, lockedOut: '',
-  /* the player this device plays as: picked here and unlocked with their PIN */
-  me() { return this.pid && this.toks[this.pid] ? this.players.find(p => p.id === this.pid) || null : null; },
+  boards: [],        // boards on this device: [{ code, name }]
+  code: null,        // the board on show
+  name: '',
+  raw: [], players: [],
+  person: {},        // who plays on this device: { <board code>: { pid, token } }
+  live: false, note: '', tab: 'dunes', back: null, form: null, colour: 0, pinFor: null, flushing: false, lockedOut: '',
+  /* the person on the board on show */
+  me() { const t = this.person[this.code]; return t ? this.players.find(p => p.id === t.pid) || null : null; },
+  signedIn() { return Object.keys(this.person).length > 0; },
+  /* the person as some board on this device knows them, for name, colour and bests */
+  personPlayer() {
+    const m = this.me(); if (m) return m;
+    for (const code of Object.keys(this.person)) {
+      const c = store.get('cache.' + code, null), pid = this.person[code].pid;
+      const p = c && Array.isArray(c.players) && c.players.find(x => x.id === pid);
+      if (p) return p;
+    }
+    return null;
+  },
   best(p, b) { return p && p.b && p.b[b] ? p.b[b].s | 0 : 0; },
   games(p, b) { let n = 0; const g = p && p.g && p.g[b]; if (g) for (const k in g) n += g[k] | 0; return n; }
 };
@@ -1825,35 +1885,54 @@ let pendingQ = [];
 const savePending = () => store.set('pending', pendingQ.slice(-200));
 const pc = p => P_COLORS[p && p.c] || P_COLORS[0];
 const initial = n => (Array.from(String(n || '?').trim())[0] || '?').toUpperCase();
-const tokensOf = code => { const t = store.get('toks.' + code, null); return t && typeof t === 'object' ? t : {}; };
-function setTok(pid, token) {
-  if (token) Fam.toks[pid] = token; else delete Fam.toks[pid];
-  store.set('toks.' + Fam.code, Fam.toks);
+const saveBoards = () => { store.set('boards', Fam.boards); store.set('active', Fam.code); };
+const savePerson = () => store.set('person', Fam.person);
+function newId() {
+  const bytes = crypto.getRandomValues(new Uint8Array(12)), abc = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  return Array.from(bytes, b => abc[b % abc.length]).join('');
 }
 
 function famLoad() {
+  Fam.boards = (store.get('boards', []) || []).filter(b => b && CODE_RE.test(b.code));
+  Fam.person = store.get('person', {}) || {};
+  pendingQ = store.get('pending', []);
+  if (!Array.isArray(pendingQ)) pendingQ = [];
+  // the first version kept one board in 'family' and a token per player
+  const old = store.get('family', null);
+  if (CODE_RE.test(old || '')) {
+    if (!Fam.boards.some(b => b.code === old)) Fam.boards.push({ code: old, name: '' });
+    const toks = store.get('toks.' + old, {}) || {}, pid = store.get('player.' + old, null);
+    if (pid && toks[pid] && !Fam.signedIn()) Fam.person = { [old]: { pid, token: toks[pid] } };
+    pendingQ.forEach(q => { if (!q.token && q.code === old && toks[q.pid]) q.token = toks[q.pid]; });
+    const c = store.get('cache.' + old, null);
+    if (Array.isArray(c)) store.set('cache.' + old, { name: '', players: c });
+    for (const k of ['family', 'toks.' + old, 'player.' + old]) store.set(k, null);
+    store.set('active', old); savePending(); savePerson();
+  }
+  let joined = null;
   try {
     const u = new URL(location.href);
     if (u.searchParams.has('family')) {
       const c = normCode(u.searchParams.get('family'));
-      if (CODE_RE.test(c)) store.set('family', c);
+      if (CODE_RE.test(c)) { joined = c; if (!Fam.boards.some(b => b.code === c)) Fam.boards.push({ code: c, name: '' }); store.set('active', c); }
       u.searchParams.delete('family');
       history.replaceState(null, '', u.pathname + u.search + u.hash);
     }
   } catch (e) { /* no URL API */ }
-  pendingQ = store.get('pending', []);
-  if (!Array.isArray(pendingQ)) pendingQ = [];
-  const c = store.get('family', null);
-  if (CODE_RE.test(c || '')) famSet(c); else Fam.code = null;
+  const act = store.get('active', null);
+  famShow(Fam.boards.some(b => b.code === act) ? act : Fam.boards[0] ? Fam.boards[0].code : null);
+  saveBoards();
+  return joined;
 }
-function famSet(code) {
-  Fam.code = code; store.set('family', code);
-  Fam.pid = store.get('player.' + code, null);
-  Fam.toks = tokensOf(code);
-  const cached = store.get('cache.' + code, null);
-  Fam.raw = Array.isArray(cached) ? cached : [];
-  Fam.live = false; Fam.note = ''; Fam.adding = false; Fam.pinFor = null;
+/* put a board on show */
+function famShow(code) {
+  Fam.code = code; Fam.live = false; Fam.form = null; Fam.pinFor = null;
+  const c = code ? store.get('cache.' + code, null) : null;
+  const b = Fam.boards.find(x => x.code === code);
+  Fam.name = (c && c.name) || (b && b.name) || (code ? 'Board ' + prettyCode(code) : '');
+  Fam.raw = c && Array.isArray(c.players) ? c.players : [];
   famView();
+  store.set('active', code);
 }
 async function famApi(method, path, body, token) {
   const headers = {};
@@ -1877,7 +1956,7 @@ function famView() {
     if (q.s > 0 && (!p.b[q.board] || p.b[q.board].s < q.s)) p.b[q.board] = { s: q.s, sp: q.sp, lv: q.lv, len: q.len, at: q.at };
   }
 }
-function famStore() { store.set('cache.' + Fam.code, Fam.raw); }
+function famStore() { if (Fam.code) store.set('cache.' + Fam.code, { name: Fam.name, players: Fam.raw }); }
 let famTimer = 0;
 async function famRefresh() {
   clearTimeout(famTimer); famTimer = 0;
@@ -1887,13 +1966,15 @@ async function famRefresh() {
       const j = await famApi('GET', '/f/' + code + '/players');
       if (code !== Fam.code) return;
       Fam.raw = Array.isArray(j.players) ? j.players : [];
+      Fam.name = j.name || Fam.name;
+      const b = Fam.boards.find(x => x.code === code); if (b && b.name !== Fam.name) { b.name = Fam.name; saveBoards(); }
       Fam.live = true;
       famStore();
-      for (const id of Object.keys(Fam.toks)) if (!Fam.raw.some(p => p.id === id)) setTok(id, null);
-      if (Fam.pid && !Fam.raw.some(p => p.id === Fam.pid)) famPick(null);
+      const t = Fam.person[code];
+      if (t && !Fam.raw.some(p => p.id === t.pid)) { delete Fam.person[code]; savePerson(); }
     } catch (e) {
       if (code !== Fam.code) return;
-      if (e.status === 404) { famForget('That family board no longer exists. You can make a new one.'); return; }
+      if (e.status === 404) { famDrop(code, 'That board no longer exists.'); return; }
       Fam.live = false;
     }
     famView();
@@ -1901,24 +1982,34 @@ async function famRefresh() {
   famSync();
   if (Fam.code && !document.hidden && (!famScreen.hidden || !titleScreen.hidden)) famTimer = setTimeout(famRefresh, 15000);
 }
-function famForget(note) {
-  if (Fam.code) { store.set('cache.' + Fam.code, null); store.set('toks.' + Fam.code, null); store.set('player.' + Fam.code, null); }
-  pendingQ = pendingQ.filter(q => q.code !== Fam.code); savePending();
-  Fam.code = null; Fam.pid = null; Fam.raw = []; Fam.players = []; Fam.toks = {}; Fam.live = false;
-  Fam.adding = false; Fam.pinFor = null; Fam.note = note || '';
-  store.set('family', null);
+/* take a board off this device */
+function famDrop(code, note) {
+  Fam.boards = Fam.boards.filter(b => b.code !== code);
+  store.set('cache.' + code, null);
+  delete Fam.person[code]; savePerson();
+  const next = Fam.boards[0] ? Fam.boards[0].code : null;
+  famShow(next); saveBoards();
+  Fam.note = note || '';
+  famSync(); famSay(Fam.note);
+  if (next) famRefresh();
+}
+/* the person on this device becomes someone else: everything of the previous person is forgotten here */
+function famSwitchTo(code, pid, token, linked) {
+  Fam.person = { [code]: { pid, token } };
+  for (const l of linked || []) {
+    const b = Fam.boards.find(x => x.code === l.code);
+    if (b) { Fam.person[l.code] = { pid: l.id, token: l.token }; if (l.name && !b.name) b.name = l.name; }
+  }
+  Fam.lockedOut = '';
+  savePerson(); saveBoards();
   famSync();
 }
-function famPick(id) {
-  Fam.pid = id; store.set('player.' + Fam.code, id);
-  if (id) Fam.lockedOut = '';
-  famSync();
-}
-/* every finished game counts; the server keeps it as the best run if it beats the old one */
+function famSignOut() { Fam.person = {}; savePerson(); famSync(); }
+/* every finished game counts; the server counts it on every board the person is on */
 function famRecord(st) {
-  const me = Fam.me();
-  if (!me) return;
-  pendingQ.push({ code: Fam.code, pid: me.id, board: st.board, sp: st.speed, s: st.score, lv: Math.min(999, st.level), len: Math.min(10000, st.snake.length), at: Date.now() });
+  if (!Fam.signedIn()) return;
+  const code = Fam.person[Fam.code] ? Fam.code : Object.keys(Fam.person)[0], t = Fam.person[code];
+  pendingQ.push({ code, pid: t.pid, token: t.token, board: st.board, sp: st.speed, s: st.score, lv: Math.min(999, st.level), len: Math.min(10000, st.snake.length), at: Date.now() });
   savePending(); famView();
   famFlush();
 }
@@ -1929,20 +2020,24 @@ async function famFlush() {
   try {
     while (pendingQ.length) {
       const q = pendingQ[0];
-      const token = q.code === Fam.code ? Fam.toks[q.pid] : tokensOf(q.code)[q.pid];
-      if (token) {
+      if (q.token) {
         try {
-          await famApi('POST', '/f/' + q.code + '/players/' + q.pid + '/games', { board: q.board, speed: q.sp, score: q.s, level: q.lv, len: q.len }, token);
+          await famApi('POST', '/f/' + q.code + '/players/' + q.pid + '/games', { board: q.board, speed: q.sp, score: q.s, level: q.lv, len: q.len }, q.token);
           sent = true;
         } catch (e) {
           if (e.status === 0 || e.status === 429 || e.status >= 500) break;
-          if (e.status === 401 && q.code === Fam.code) { setTok(q.pid, null); lost = q.pid; }
+          const t = Fam.person[q.code];
+          if (e.status === 401 && t && t.pid === q.pid && t.token === q.token) { lost = q; delete Fam.person[q.code]; savePerson(); }
         }
       }
       pendingQ.shift(); savePending();
     }
   } finally { Fam.flushing = false; }
-  if (lost) { const p = Fam.raw.find(x => x.id === lost); Fam.lockedOut = p ? p.n : 'This player'; famSync(); }
+  if (lost) {
+    const c = store.get('cache.' + lost.code, null), p = c && c.players && c.players.find(x => x.id === lost.pid);
+    Fam.lockedOut = p ? p.n : 'This player';
+    famView(); famSync();
+  }
   if (sent && Fam.code) famRefresh();
 }
 function famSay(t) { famMsg.textContent = t || ''; }
@@ -1959,30 +2054,38 @@ function ago(t) {
 function rankedFor(board) {
   return Fam.players.filter(p => Fam.best(p, board) > 0).sort((a, b) => Fam.best(b, board) - Fam.best(a, board) || a.b[board].at - b.b[board].at);
 }
-/* the player row on the title screen */
+/* a board on this device but nobody plays here: every game needs a player */
+function famNeedsPlayer() { return Fam.boards.length > 0 && !Fam.signedIn(); }
+
+/* ---------- title and game-over lines ---------- */
 function famWho() {
-  const me = Fam.me(), av = $('#whoAv');
-  av.hidden = !me; $('#whoIc').hidden = !!me;
-  if (me) { av.textContent = initial(me.n); av.style.setProperty('--pc', pc(me)); }
-  $('#whoLbl').textContent = !Fam.code ? 'Family leaderboard' : me ? 'Playing as' : 'Family board ' + prettyCode(Fam.code);
-  $('#whoName').textContent = !Fam.code ? 'Keep best scores on every device' : me ? me.n : "Who's playing?";
-  $('#whoGo').textContent = !Fam.code ? 'Set up' : me ? 'Scores' : 'Pick';
-  whoBtn.classList.toggle('need', !!Fam.code && !me);
+  const pp = Fam.personPlayer(), av = $('#whoAv');
+  av.hidden = !pp; $('#whoIc').hidden = !!pp;
+  if (pp) { av.textContent = initial(pp.n); av.style.setProperty('--pc', pc(pp)); }
+  const many = Fam.boards.length > 1;
+  $('#whoLbl').textContent = !Fam.code ? 'Family leaderboard' : pp ? 'Playing as' : Fam.name;
+  $('#whoName').textContent = !Fam.code ? 'Keep best scores on every device' : pp ? pp.n : "Who's playing?";
+  $('#whoGo').textContent = !Fam.code ? 'Set up' : pp ? (many ? 'Boards' : 'Scores') : 'Pick';
+  whoBtn.classList.toggle('need', !!Fam.code && !pp);
+  switchBtn.hidden = !pp;
 }
 function famOverLine() {
   const el = $('#overFam'), me = Fam.me();
   $('#overFamBtn').hidden = !Fam.code;
-  if (!me && Fam.lockedOut && S && !S.demo) { el.textContent = Fam.lockedOut + "'s PIN was changed on another device, so this game was not counted. Enter the new PIN in Family board."; el.hidden = false; return; }
+  $('#overSwitch').hidden = !Fam.signedIn();
+  if (!me && Fam.lockedOut && S && !S.demo) { el.textContent = Fam.lockedOut + "'s PIN was changed, so this game was not counted. Pick the player again with the new PIN."; el.hidden = false; return; }
   if (!me || !S || S.demo) { el.hidden = true; return; }
   const ranked = rankedFor(S.board), i = ranked.findIndex(p => p.id === me.id), bn = BOARDS[S.board].name;
   const n = Fam.games(me, S.board), games = n > 0 ? ' · game ' + n + ' on ' + bn : '';
   if (i < 0) { el.textContent = me.n + games.replace(' · ', ': '); el.hidden = !n; return; }
   const top = ranked[0];
   el.textContent = (i === 0
-    ? (ranked.length > 1 ? me.n + ' holds the family record on ' + bn + ': ' + Fam.best(me, S.board) : me.n + "'s best on " + bn + ': ' + Fam.best(me, S.board))
+    ? (ranked.length > 1 ? me.n + ' holds the record on ' + bn + ': ' + Fam.best(me, S.board) : me.n + "'s best on " + bn + ': ' + Fam.best(me, S.board))
     : me.n + ' is #' + (i + 1) + ' of ' + ranked.length + ' on ' + bn + ' · ' + top.n + ' leads with ' + Fam.best(top, S.board)) + games;
   el.hidden = false;
 }
+
+/* ---------- the board screen ---------- */
 function famBuild() {
   const tabs = $('#famTabs');
   for (const k of BOARD_ORDER) {
@@ -1997,257 +2100,343 @@ function famBuild() {
     sw.appendChild(b);
   });
 }
-function avatar(p, cls) {
-  const av = document.createElement('span'); av.className = 'av ' + (cls || 'sm');
-  av.style.setProperty('--pc', pc(p)); av.textContent = initial(p.n);
-  return av;
-}
+function mk(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+function avatar(p, cls) { const av = mk('span', 'av ' + (cls || 'sm'), initial(p.n)); av.style.setProperty('--pc', pc(p)); return av; }
+function smallBtn(text, cls, data) { const b = mk('button', 'btn sm' + (cls ? ' ' + cls : ''), text); b.type = 'button'; Object.assign(b.dataset, data || {}); return b; }
 function famRender() {
   if (famScreen.hidden) return;
-  const has = !!Fam.code, me = Fam.me();
-  $('#famSetup').hidden = has; $('#famMain').hidden = !has;
+  const has = !!Fam.code, me = Fam.me(), pp = Fam.personPlayer();
+  $('#famTitle').textContent = has ? Fam.name : 'Family board';
+  // boards on this device
+  const row = $('#famBoards'); row.textContent = ''; row.hidden = !has;
+  if (has) {
+    if (Fam.boards.length > 1) for (const b of Fam.boards) {
+      const x = mk('button', 'bd', b.name || prettyCode(b.code)); x.type = 'button'; x.dataset.code = b.code;
+      x.setAttribute('aria-pressed', String(b.code === Fam.code)); row.appendChild(x);
+    }
+    const nb = mk('button', 'bd add', '+ New board'); nb.type = 'button'; nb.id = 'famNewBoard'; row.appendChild(nb);
+    const jb = mk('button', 'bd add', 'Join a board'); jb.type = 'button'; jb.id = 'famJoinBoard'; row.appendChild(jb);
+  }
+  // create and join forms
+  $('#famCreate').hidden = Fam.form !== 'create';
+  $('#famJoinForm').hidden = Fam.form !== 'join';
+  if (Fam.form === 'create') {
+    $('#famBringRow').hidden = !pp;
+    if (pp) $('#famBringTxt').textContent = 'Bring ' + pp.n + "'s scores (" + pp.n + ' will be on both boards)';
+    $('#famCreateHint').textContent = pp ? 'You will be the parent of the new board: you can remove players and reset PINs there.' : 'The first player you add will be the parent of the board.';
+  }
+  $('#famSetup').hidden = has || !!Fam.form;
+  $('#famMain').hidden = !has;
   if (!has) return;
-  $('#famCodeTxt').textContent = prettyCode(Fam.code);
   // who's playing
+  $('#famWhoLbl').textContent = me ? 'Playing on this device: ' + me.n + ' · tap another name to switch' : "Who's playing on this device?";
   const list = $('#famPlayers'); list.textContent = '';
   for (const p of Fam.players) {
-    const b = document.createElement('button'); b.type = 'button'; b.className = 'pl'; b.dataset.pid = p.id;
+    const b = mk('button', 'pl'); b.type = 'button'; b.dataset.pid = p.id;
     b.setAttribute('aria-pressed', String(!!me && p.id === me.id)); b.style.setProperty('--pc', pc(p));
-    const nm = document.createElement('span'); nm.textContent = p.n;
-    b.append(avatar(p), nm);
-    if (!Fam.toks[p.id]) { const lock = document.createElement('i'); lock.className = 'lock'; lock.setAttribute('aria-label', 'needs PIN'); b.appendChild(lock); }
+    b.append(avatar(p), mk('span', '', p.n));
+    if (p.role === 'parent') b.appendChild(mk('small', '', 'parent'));
+    if (!(me && p.id === me.id)) { const lock = mk('i', 'lock'); lock.setAttribute('aria-label', 'needs PIN'); b.appendChild(lock); }
     list.appendChild(b);
   }
-  if (!Fam.adding && !Fam.pinFor && Fam.players.length < MAX_PLAYERS) {
-    const b = document.createElement('button'); b.type = 'button'; b.className = 'pl add'; b.id = 'famAddBtn'; b.textContent = '+ Add player';
+  if (!me && pp && !Fam.form && !Fam.pinFor && Fam.players.length < MAX_PLAYERS) {
+    const b = mk('button', 'pl bring'); b.type = 'button'; b.id = 'famBringBtn'; b.style.setProperty('--pc', pc(pp));
+    b.append(avatar(pp), mk('span', '', 'Join as ' + pp.n));
     list.appendChild(b);
   }
-  $('#famAdd').hidden = !Fam.adding;
+  if (Fam.form !== 'add' && !Fam.pinFor && Fam.players.length < MAX_PLAYERS) {
+    const b = mk('button', 'pl add', '+ Add player'); b.type = 'button'; b.id = 'famAddBtn'; list.appendChild(b);
+  }
+  $('#famAdd').hidden = Fam.form !== 'add';
   document.querySelectorAll('#famColors .sw').forEach(b => b.setAttribute('aria-checked', String(+b.dataset.c === Fam.colour)));
   // PIN prompt
-  const pf = Fam.pinFor, pp = pf && Fam.players.find(p => p.id === pf.id);
-  $('#famPin').hidden = !pp;
-  if (pp) {
-    $('#famPinLbl').textContent = pf.mode === 'unlock' ? pp.n + "'s PIN" : pf.mode === 'set' ? 'Choose a PIN for ' + pp.n : 'New PIN for ' + pp.n;
-    $('#famPinHint').textContent = pf.mode === 'unlock' ? 'Needed once on this device.'
-      : pf.mode === 'set' ? pp.n + ' was added before PINs. Pick 4 digits: every device will need them to play as ' + pp.n + '.'
-      : 'Other devices will need the new PIN.';
-    $('#famPinOk').textContent = pf.mode === 'unlock' ? 'Unlock' : 'Save PIN';
+  const pf = Fam.pinFor, tp = pf && Fam.players.find(p => p.id === pf.id);
+  $('#famPin').hidden = !tp;
+  if (tp) {
+    $('#famPinLbl').textContent = pf.mode === 'unlock' ? tp.n + "'s PIN" : pf.mode === 'set' ? 'Choose a PIN for ' + tp.n : 'New PIN for ' + tp.n;
+    $('#famPinHint').textContent = pf.mode === 'unlock' ? (pp ? pp.n + ' will be signed out of this device.' : 'Plays as ' + tp.n + ' on this device until someone switches.')
+      : pf.mode === 'set' ? tp.n + ' was added before PINs. Pick 4 digits: they are needed to play as ' + tp.n + '.'
+      : pf.mode === 'reset' ? tp.n + ' is signed out of their devices and needs the new PIN.'
+      : 'Your other devices will need the new PIN.';
+    $('#famPinOk').textContent = pf.mode === 'unlock' ? 'Switch' : 'Save PIN';
   }
-  // player actions
-  const rm = $('#famRemove'), ch = $('#famChPin');
-  rm.hidden = ch.hidden = !me;
-  if (me && !rm.dataset.sure) rm.textContent = 'Remove ' + me.n;
-  // best scores on the chosen board
+  // footer actions
+  $('#famCodeTxt').textContent = prettyCode(Fam.code);
+  $('#famChPin').hidden = !me;
+  $('#famSignOut').hidden = !Fam.signedIn();
+  if (pp) $('#famSignOut').textContent = 'Sign out ' + pp.n;
+  // best scores on the chosen map
   document.querySelectorAll('#famTabs .tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.board === Fam.tab)));
   const bn = BOARDS[Fam.tab].name;
   const ol = $('#famRanks'); ol.textContent = '';
   const ranked = rankedFor(Fam.tab);
-  if (!ranked.length) {
-    const li = document.createElement('li'); li.className = 'empty';
-    li.textContent = Fam.players.length ? 'No scores on ' + bn + ' yet.' : 'Add a player to start the board.';
-    ol.appendChild(li);
-  }
+  if (!ranked.length) ol.appendChild(mk('li', 'empty', Fam.players.length ? 'No scores on ' + bn + ' yet.' : 'Add a player to start the board.'));
   ranked.forEach((p, i) => {
-    const r = p.b[Fam.tab], li = document.createElement('li');
-    if (me && p.id === me.id) li.className = 'me';
+    const r = p.b[Fam.tab], li = mk('li', me && p.id === me.id ? 'me' : '');
     li.style.setProperty('--pc', pc(p));
-    const rk = document.createElement('span'); rk.className = 'rk'; rk.textContent = i + 1;
-    const nm = document.createElement('span'); nm.className = 'nm';
-    const b = document.createElement('b'); b.textContent = p.n;
-    const sm = document.createElement('small'); sm.textContent = 'Speed ' + r.sp + ' · level ' + r.lv + ' · ' + ago(r.at);
-    nm.append(b, sm);
-    const sc = document.createElement('span'); sc.className = 'sc'; sc.textContent = r.s;
-    li.append(rk, avatar(p), nm, sc); ol.appendChild(li);
+    const nm = mk('span', 'nm'); nm.append(mk('b', '', p.n), mk('small', '', 'Speed ' + r.sp + ' · level ' + r.lv + ' · ' + ago(r.at)));
+    li.append(mk('span', 'rk', i + 1), avatar(p), nm, mk('span', 'sc', r.s)); ol.appendChild(li);
   });
-  // games played on the chosen board, by starting speed
+  // games played on the chosen map, by starting speed
   $('#famGamesLbl').textContent = 'Games on ' + bn + ' by starting speed';
   const rows = Fam.players.filter(p => Fam.games(p, Fam.tab) > 0);
   const tbl = $('#famGames'); tbl.textContent = '';
   $('#famGamesWrap').hidden = !rows.length; $('#famGamesEmpty').hidden = !!rows.length;
   $('#famGamesEmpty').textContent = 'No games on ' + bn + ' yet.';
   if (rows.length) {
-    const thead = tbl.createTHead(), hr = thead.insertRow();
-    const corner = document.createElement('th'); corner.scope = 'col'; corner.textContent = 'Player'; hr.appendChild(corner);
-    for (let s = 1; s <= 9; s++) { const th = document.createElement('th'); th.scope = 'col'; th.textContent = s; hr.appendChild(th); }
-    const all = document.createElement('th'); all.scope = 'col'; all.textContent = 'All'; hr.appendChild(all);
+    const hr = tbl.createTHead().insertRow();
+    const corner = mk('th', '', 'Player'); corner.scope = 'col'; hr.appendChild(corner);
+    for (let s = 1; s <= 9; s++) { const th = mk('th', '', s); th.scope = 'col'; hr.appendChild(th); }
+    const all = mk('th', '', 'All'); all.scope = 'col'; hr.appendChild(all);
     const tb = tbl.createTBody();
     for (const p of rows) {
       const tr = tb.insertRow(); if (me && p.id === me.id) tr.className = 'me';
-      const th = document.createElement('th'); th.scope = 'row';
-      const wrapEl = document.createElement('span'); wrapEl.className = 'nmc';
-      const nm = document.createElement('b'); nm.textContent = p.n;
-      wrapEl.append(avatar(p, 'xs'), nm); th.appendChild(wrapEl); tr.appendChild(th);
+      const th = mk('th'); th.scope = 'row';
+      const w = mk('span', 'nmc'); w.append(avatar(p, 'xs'), mk('b', '', p.n)); th.appendChild(w); tr.appendChild(th);
       const g = p.g[Fam.tab] || {};
       for (let s = 1; s <= 9; s++) { const td = tr.insertCell(); const n = g[s] | 0; td.textContent = n || '·'; if (!n) td.className = 'z'; }
       const tot = tr.insertCell(); tot.className = 't'; tot.textContent = Fam.games(p, Fam.tab);
     }
   }
+  // parents: manage the other players
+  const isParent = !!me && me.role === 'parent';
+  $('#famManage').hidden = !isParent;
+  const ml = $('#famManageList'); ml.textContent = '';
+  if (isParent) for (const p of Fam.players) {
+    if (p.id === me.id) continue;
+    const li = mk('li'), who = mk('span', 'who-n'); who.append(avatar(p), mk('b', '', p.n));
+    if (p.role === 'parent') who.appendChild(mk('span', 'tag parent', 'Parent'));
+    const acts = mk('span', 'acts');
+    acts.append(smallBtn('Reset PIN', '', { act: 'reset', pid: p.id }),
+      smallBtn(p.role === 'parent' ? 'Make child' : 'Make parent', '', { act: 'role', pid: p.id }),
+      smallBtn('Remove', 'warn', { act: 'remove', pid: p.id }));
+    li.append(who, acts); ml.appendChild(li);
+  }
+  if (isParent && Fam.players.length < 2) ml.appendChild(mk('li', 'fine', 'Players you add or invite show up here.'));
   $('#famSync').textContent = Fam.live ? '' : 'Offline · saved scores';
 }
 function famSync() {
   famWho();
   if (!titleScreen.hidden) syncPickers();
   if (!overScreen.hidden) famOverLine();
-  if (!famScreen.hidden) { famRender(); if (!Fam.code) famSay(Fam.note); }
+  if (!famScreen.hidden) famRender();
   lastBest = '';
 }
-function openFam(tab) {
+function openFam(tab, note) {
   Fam.back = !overScreen.hidden ? overScreen : titleScreen;
   Fam.tab = BOARDS[tab] ? tab : cfg.board;
   Fam.pinFor = null;
-  Fam.adding = !!Fam.code && !Fam.players.length;
-  famSay(Fam.code ? '' : Fam.note);
+  Fam.form = Fam.code && !Fam.players.length ? 'add' : null;
+  famSay(note || '');
   show(famScreen); famScreen.scrollTop = 0;
   famRender();
   famRefresh();
 }
 function closeFam() {
-  const back = Fam.back || titleScreen; Fam.back = null; Fam.adding = false; Fam.pinFor = null;
-  for (const id of ['#famLeave', '#famRemove']) delete $(id).dataset.sure;
-  $('#famLeave').textContent = 'Leave board';
+  const back = Fam.back || titleScreen; Fam.back = null; Fam.form = null; Fam.pinFor = null;
   show(back);
   if (back === overScreen) famOverLine(); else { syncPickers(); famWho(); }
   famRefresh();
 }
-function famSure(btn, label, again) {
-  if (btn.dataset.sure) return true;
-  btn.dataset.sure = '1'; btn.textContent = again;
-  setTimeout(() => { if (btn.dataset.sure) { delete btn.dataset.sure; btn.textContent = label(); } }, 4000);
+function famSure(b, again) {
+  if (b.dataset.sure) return true;
+  const was = b.textContent;
+  b.dataset.sure = '1'; b.textContent = again;
+  setTimeout(() => { if (b.isConnected && b.dataset.sure) { delete b.dataset.sure; b.textContent = was; } }, 4000);
   return false;
 }
-async function famCreate(btn) {
-  btn.disabled = true; famSay('Creating your family board…');
+const errText = (e, what) => e.status === 0 ? 'You are offline. ' + what + ' needs a connection.' : e.status === 429 ? 'Too many tries. Wait a few minutes.' : 'Could not finish: ' + what.toLowerCase() + '. Try again.';
+
+/* ---------- actions ---------- */
+async function famCreateBoard(b) {
+  const typed = $('#famBoardName').value.replace(/\s+/g, ' ').trim();
+  const pp = Fam.personPlayer(), bring = !!pp && $('#famBring').checked;
+  const fromCode = bring ? (Fam.person[Fam.code] ? Fam.code : Object.keys(Fam.person)[0]) : null;
+  const from = fromCode ? Fam.person[fromCode] : null;
+  b.disabled = true; famSay('Creating the board…');
   try {
-    const j = await famApi('POST', '/families');
+    const j = await famApi('POST', '/families', { name: typed || (pp ? pp.n + "'s board" : 'Family board') });
     if (!CODE_RE.test(j && j.code || '')) throw new Error('bad code');
-    famSet(j.code); Fam.adding = true; Fam.live = true; famSay('');
-    famSync(); const n = $('#famName'); if (n) n.focus();
+    Fam.boards.push({ code: j.code, name: j.name }); famShow(j.code); Fam.name = j.name; saveBoards();
+    $('#famBoardName').value = '';
+    if (from) {
+      const id = newId();
+      const r = await famApi('PUT', '/f/' + j.code + '/players/' + id, { from: { code: fromCode, id: from.pid } }, from.token);
+      Fam.person[j.code] = { pid: r.id || id, token: r.token }; savePerson();
+      famSay('Board ready, with ' + pp.n + "'s scores. Tap Invite to send it to friends.");
+      Fam.form = null;
+    } else {
+      Fam.form = 'add'; famSay('Board ready. Add the first player: they will be its parent.');
+    }
+    Fam.live = true; famSync(); famRefresh();
   } catch (e) {
-    famSay(e.status === 429 ? 'Too many new boards from this network. Try again in an hour.' : 'Could not create a board. Check the connection and try again.');
-  } finally { btn.disabled = false; }
+    famSay(e.status === 429 ? 'Too many new boards from this network. Try again in an hour.' : errText(e, 'Creating a board'));
+  } finally { b.disabled = false; }
 }
-async function famJoin(btn) {
+async function famJoinBoard(b) {
   const c = normCode($('#famCode').value);
   if (!CODE_RE.test(c)) { famSay('The code is 8 letters and numbers, like ABCD-2345.'); return; }
-  btn.disabled = true; famSay('Checking…');
+  b.disabled = true; famSay('Checking…');
   try {
     const j = await famApi('GET', '/f/' + c + '/players');
-    famSet(c); Fam.raw = j.players || []; Fam.live = true; famStore(); famView();
-    Fam.adding = !Fam.players.length;
-    famSay(Fam.players.length ? 'Joined. Tap your name and enter your PIN.' : '');
-    $('#famCode').value = '';
+    if (!Fam.boards.some(x => x.code === c)) Fam.boards.push({ code: c, name: j.name });
+    famShow(c); Fam.name = j.name; Fam.raw = j.players || []; Fam.live = true; famStore(); famView(); saveBoards();
+    $('#famCode').value = ''; Fam.form = null;
+    famJoinedNote();
     famSync();
   } catch (e) {
-    famSay(e.status === 404 ? 'No family board has that code.' : 'Could not check the code. Try again.');
-  } finally { btn.disabled = false; }
+    famSay(e.status === 404 ? 'No board has that code.' : errText(e, 'Checking the code'));
+  } finally { b.disabled = false; }
 }
-async function famSaveNew(btn) {
+function famJoinedNote() {
+  const pp = Fam.personPlayer();
+  Fam.form = null;
+  if (Fam.me()) famSay('');
+  else if (pp) famSay('Tap "Join as ' + pp.n + '" to bring your scores here, or pick a name.');
+  else if (Fam.players.length) famSay('Tap your name, or add yourself.');
+  else { famSay('Add the first player: they will be the parent of this board.'); Fam.form = 'add'; }
+}
+async function famAddPlayer(b) {
   const input = $('#famName'), name = input.value.replace(/\s+/g, ' ').trim(), pin = $('#famNewPin').value.trim();
   if (!name) { famSay('Type a name first.'); input.focus(); return; }
-  if (Fam.players.some(p => p.n.toLowerCase() === name.toLowerCase())) { famSay(name + ' is already on the board. Tap the name to play as them.'); return; }
+  if (Fam.players.some(p => p.n.toLowerCase() === name.toLowerCase())) { famSay(name + ' is already on the board. Tap the name to switch.'); return; }
   if (!PIN_RE.test(pin)) { famSay('The PIN is 4 digits.'); $('#famNewPin').focus(); return; }
-  const bytes = crypto.getRandomValues(new Uint8Array(12)), abc = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  const id = Array.from(bytes, b => abc[b % abc.length]).join('');
-  btn.disabled = true; famSay('Saving…');
+  const id = newId();
+  b.disabled = true; famSay('Saving…');
   try {
     const j = await famApi('PUT', '/f/' + Fam.code + '/players/' + id, { name, colour: Fam.colour, pin });
-    setTok(id, j.token);
-    Fam.raw.push({ id, n: name, c: Fam.colour, pin: true, b: {}, g: {} }); famStore(); famView();
-    input.value = ''; $('#famNewPin').value = ''; Fam.adding = false;
-    famSay('Remember the PIN: ' + name + ' needs it on every other device.');
-    famPick(id);
+    Fam.raw.push({ id, n: name, c: Fam.colour, role: j.role || 'child', pin: true, b: {}, g: {} }); famStore(); famView();
+    input.value = ''; $('#famNewPin').value = ''; Fam.form = null;
+    famSwitchTo(Fam.code, id, j.token, []);
+    famSay((j.role === 'parent' ? name + ' is the parent of this board. ' : '') + 'Now playing as ' + name + '. Remember the PIN.');
     famRefresh();
   } catch (e) {
-    famSay(e.status === 409 ? 'The board is full (12 players).' : e.status === 0 ? 'You are offline. Adding a player needs a connection.' : 'Could not add the player. Try again.');
-  } finally { btn.disabled = false; }
+    famSay(e.status === 409 ? 'The board is full (12 players).' : errText(e, 'Adding a player'));
+  } finally { b.disabled = false; }
+}
+async function famBringMe(b) {
+  const pp = Fam.personPlayer(); if (!pp) return;
+  const fromCode = Object.keys(Fam.person)[0], from = Fam.person[fromCode];
+  b.disabled = true; famSay('Bringing ' + pp.n + "'s scores…");
+  try {
+    const id = newId();
+    const j = await famApi('PUT', '/f/' + Fam.code + '/players/' + id, { from: { code: fromCode, id: from.pid } }, from.token);
+    Fam.person[Fam.code] = { pid: j.id || id, token: j.token }; savePerson();
+    famSay(pp.n + ' is on this board now, with their scores. Every game counts on both boards.');
+    famRefresh();
+  } catch (e) {
+    famSay(e.status === 409 ? 'The board is full (12 players).' : e.status === 401 ? 'This device needs ' + pp.n + "'s PIN again." : errText(e, 'Joining'));
+    if (e.status === 401) famSignOut();
+  } finally { b.disabled = false; }
 }
 function famChoose(id) {
-  const p = Fam.players.find(x => x.id === id); if (!p) return;
-  if (Fam.toks[id]) { Fam.pinFor = null; famPick(id); famSay(''); return; }
-  Fam.adding = false; Fam.pinFor = { id, mode: p.pin ? 'unlock' : 'set' };
+  const p = Fam.players.find(x => x.id === id), me = Fam.me(); if (!p) return;
+  if (me && me.id === id) { famSay(''); return; }
+  Fam.form = null; Fam.pinFor = { id, mode: p.pin ? 'unlock' : 'set' };
   famSay(''); famRender();
   const inp = $('#famPinIn'); inp.value = ''; inp.focus();
 }
-async function famPinSubmit(btn) {
+async function famPinSubmit(b) {
   const pf = Fam.pinFor; if (!pf) return;
   const pin = $('#famPinIn').value.trim();
   if (!PIN_RE.test(pin)) { famSay('The PIN is 4 digits.'); return; }
   const p = Fam.players.find(x => x.id === pf.id); if (!p) { Fam.pinFor = null; famRender(); return; }
-  btn.disabled = true; famSay('Checking…');
+  const me = Fam.me(), myTok = Fam.person[Fam.code] && Fam.person[Fam.code].token;
+  b.disabled = true; famSay('Checking…');
   try {
     if (pf.mode === 'change') {
-      await famApi('POST', '/f/' + Fam.code + '/players/' + pf.id + '/pin', { pin }, Fam.toks[pf.id]);
-      famSay('PIN changed. Other devices need the new PIN to play as ' + p.n + '.');
+      const j = await famApi('POST', '/f/' + Fam.code + '/players/' + pf.id + '/pin', { pin }, myTok);
+      famSwitchTo(Fam.code, pf.id, myTok, j.linked);
+      famSay('PIN changed. Your other devices need the new PIN.');
+    } else if (pf.mode === 'reset') {
+      const j = await famApi('POST', '/f/' + Fam.code + '/players/' + pf.id + '/reset', { pin }, myTok);
+      famSay(p.n + "'s new PIN is saved." + (j.separated ? ' ' + p.n + "'s other boards keep the old PIN, and games here no longer count there." : ''));
     } else {
       const j = await famApi('POST', '/f/' + Fam.code + '/players/' + pf.id + '/unlock', { pin });
-      setTok(pf.id, j.token);
-      famSay(j.set ? 'PIN saved. ' + p.n + ' needs it on every other device.' : '');
-      famPick(pf.id);
+      famSwitchTo(Fam.code, pf.id, j.token, j.linked);
+      famSay(j.set ? 'PIN saved. Now playing as ' + p.n + '.' : (me ? me.n + ' is signed out. ' : '') + 'Now playing as ' + p.n + '.');
     }
     Fam.pinFor = null; $('#famPinIn').value = '';
     famRefresh();
   } catch (e) {
     $('#famPinIn').value = '';
-    famSay(e.status === 403 ? 'Wrong PIN. Try again.' : e.status === 429 ? 'Too many wrong PINs. Wait 15 minutes and try again.'
-      : e.status === 401 ? 'This device needs ' + p.n + "'s current PIN first." : e.status === 0 ? 'You are offline. The PIN needs a connection.' : 'Could not check the PIN. Try again.');
-    if (e.status === 401) { setTok(pf.id, null); Fam.pinFor = { id: pf.id, mode: 'unlock' }; famPick(null); }
-  } finally { btn.disabled = false; famRender(); }
+    famSay(e.status === 403 ? (pf.mode === 'unlock' || pf.mode === 'set' ? 'Wrong PIN. Try again.' : 'Only a parent can do that.') : e.status === 429 ? 'Too many wrong PINs. Wait 15 minutes and try again.'
+      : e.status === 401 ? 'This device needs your PIN again.' : errText(e, 'Checking the PIN'));
+    if (e.status === 401) { famSignOut(); Fam.pinFor = null; }
+  } finally { b.disabled = false; famRender(); }
 }
-async function famRemove(btn) {
-  const me = Fam.me(); if (!me) return;
-  if (!famSure(btn, () => 'Remove ' + (Fam.me() ? Fam.me().n : 'player'), 'Remove ' + me.n + ', their scores and games? Tap again')) return;
-  delete btn.dataset.sure;
-  btn.disabled = true;
+async function famManageAct(b) {
+  const p = Fam.players.find(x => x.id === b.dataset.pid), me = Fam.me(); if (!p || !me) return;
+  const tok = Fam.person[Fam.code].token;
+  if (b.dataset.act === 'reset') { Fam.form = null; Fam.pinFor = { id: p.id, mode: 'reset' }; famSay(''); famRender(); $('#famPinIn').focus(); return; }
+  if (b.dataset.act === 'remove' && !famSure(b, 'Remove ' + p.n + '? Tap again')) return;
+  b.disabled = true;
   try {
-    await famApi('DELETE', '/f/' + Fam.code + '/players/' + me.id, null, Fam.toks[me.id]);
-    Fam.raw = Fam.raw.filter(p => p.id !== me.id); famStore();
-    pendingQ = pendingQ.filter(q => q.pid !== me.id); savePending();
-    setTok(me.id, null); famView();
-    famPick(null); famSay(me.n + ' was removed.');
+    if (b.dataset.act === 'remove') {
+      await famApi('DELETE', '/f/' + Fam.code + '/players/' + p.id, null, tok);
+      Fam.raw = Fam.raw.filter(x => x.id !== p.id); famStore(); famView();
+      famSay(p.n + ' was removed from this board.');
+    } else {
+      const role = p.role === 'parent' ? 'child' : 'parent';
+      await famApi('POST', '/f/' + Fam.code + '/players/' + p.id + '/role', { role }, tok);
+      famSay(p.n + (role === 'parent' ? ' is a parent now.' : ' is not a parent anymore.'));
+    }
+    famRefresh();
   } catch (e) {
-    famSay(e.status === 401 ? 'This device needs ' + me.n + "'s PIN again." : 'Could not remove the player. Check the connection.');
-    if (e.status === 401) { setTok(me.id, null); famPick(null); }
-  } finally { btn.disabled = false; }
+    famSay(e.status === 409 ? 'A board needs at least one parent.' : e.status === 403 ? 'Only a parent can do that.' : errText(e, 'Saving'));
+  } finally { b.disabled = false; famRender(); }
 }
 async function famShare() {
   const url = location.origin + '/?family=' + Fam.code;
-  const text = 'Sidewinder family board. Open the link on the other device, or type the code ' + prettyCode(Fam.code);
+  const text = 'Join "' + Fam.name + '" on Sidewinder. Open the link, or type the code ' + prettyCode(Fam.code);
   try { if (navigator.share) { await navigator.share({ title: 'Sidewinder', text, url }); return; } }
   catch (e) { if (e && e.name === 'AbortError') return; }
-  try { await navigator.clipboard.writeText(url); famSay('Link copied. Open it on the other device.'); }
-  catch (e) { famSay('On the other device, open ' + location.host + ' and type the code ' + prettyCode(Fam.code) + '.'); }
+  try { await navigator.clipboard.writeText(url); famSay('Invite link copied. Send it to the other device or to friends.'); }
+  catch (e) { famSay('Open ' + location.host + ' on the other device and type the code ' + prettyCode(Fam.code) + '.'); }
 }
+const SWITCH_NOTE = 'Tap the player who is playing now. They need their PIN.';
 function famWire() {
   whoBtn.addEventListener('click', () => { Snd.unlock(); openFam(); });
+  switchBtn.addEventListener('click', () => { Snd.unlock(); openFam(null, SWITCH_NOTE); });
   $('#overFamBtn').addEventListener('click', () => openFam(S && S.board));
+  $('#overSwitch').addEventListener('click', () => openFam(S && S.board, SWITCH_NOTE));
   $('#famBack').addEventListener('click', closeFam);
-  $('#famNew').addEventListener('click', e => famCreate(e.currentTarget));
-  $('#famJoin').addEventListener('click', e => famJoin(e.currentTarget));
-  $('#famCode').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); famJoin($('#famJoin')); } });
+  $('#famNew').addEventListener('click', () => { Fam.form = 'create'; $('#famBoardName').value = 'Family board'; famSay(''); famRender(); });
+  $('#famJoinOpen').addEventListener('click', () => { Fam.form = 'join'; famSay(''); famRender(); $('#famCode').focus(); });
+  $('#famBoards').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.id === 'famNewBoard') { Fam.form = 'create'; Fam.pinFor = null; const pp = Fam.personPlayer(); $('#famBoardName').value = pp ? pp.n + "'s friends" : ''; famSay(''); famRender(); $('#famBoardName').focus(); return; }
+    if (b.id === 'famJoinBoard') { Fam.form = 'join'; Fam.pinFor = null; famSay(''); famRender(); $('#famCode').focus(); return; }
+    if (b.dataset.code && b.dataset.code !== Fam.code) { famShow(b.dataset.code); famSay(''); famSync(); famRefresh(); }
+  });
+  $('#famCreate').addEventListener('submit', e => { e.preventDefault(); famCreateBoard($('#famCreateOk')); });
+  $('#famCreateCancel').addEventListener('click', () => { Fam.form = null; famSay(''); famRender(); });
+  $('#famJoinForm').addEventListener('submit', e => { e.preventDefault(); famJoinBoard($('#famJoin')); });
+  $('#famJoinCancel').addEventListener('click', () => { Fam.form = null; $('#famCode').value = ''; famSay(''); famRender(); });
   $('#famPlayers').addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b) return;
-    if (b.id === 'famAddBtn') { Fam.adding = true; Fam.pinFor = null; Fam.colour = Fam.players.length % P_COLORS.length; famSay(''); famRender(); $('#famName').focus(); return; }
+    if (b.id === 'famAddBtn') { Fam.form = 'add'; Fam.pinFor = null; Fam.colour = Fam.players.length % P_COLORS.length; famSay(''); famRender(); $('#famName').focus(); return; }
+    if (b.id === 'famBringBtn') { famBringMe(b); return; }
     if (b.dataset.pid) famChoose(b.dataset.pid);
   });
   $('#famColors').addEventListener('click', e => { const b = e.target.closest('.sw'); if (!b) return; Fam.colour = +b.dataset.c; famRender(); });
-  $('#famAdd').addEventListener('submit', e => { e.preventDefault(); famSaveNew($('#famSave')); });
-  $('#famCancel').addEventListener('click', () => { Fam.adding = false; $('#famName').value = ''; $('#famNewPin').value = ''; famSay(''); famRender(); });
+  $('#famAdd').addEventListener('submit', e => { e.preventDefault(); famAddPlayer($('#famSave')); });
+  $('#famCancel').addEventListener('click', () => { Fam.form = null; $('#famName').value = ''; $('#famNewPin').value = ''; famSay(''); famRender(); });
   $('#famPin').addEventListener('submit', e => { e.preventDefault(); famPinSubmit($('#famPinOk')); });
   $('#famPinCancel').addEventListener('click', () => { Fam.pinFor = null; $('#famPinIn').value = ''; famSay(''); famRender(); });
   for (const id of ['#famNewPin', '#famPinIn']) $(id).addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4); });
   $('#famTabs').addEventListener('click', e => { const b = e.target.closest('.tab'); if (!b) return; Fam.tab = b.dataset.board; famRender(); });
+  $('#famManageList').addEventListener('click', e => { const b = e.target.closest('button'); if (b) famManageAct(b); });
   $('#famShare').addEventListener('click', famShare);
   $('#famChPin').addEventListener('click', () => {
     const me = Fam.me(); if (!me) return;
-    Fam.adding = false; Fam.pinFor = { id: me.id, mode: 'change' }; famSay(''); famRender();
+    Fam.form = null; Fam.pinFor = { id: me.id, mode: 'change' }; famSay(''); famRender();
     const inp = $('#famPinIn'); inp.value = ''; inp.focus();
   });
-  $('#famRemove').addEventListener('click', e => famRemove(e.currentTarget));
+  $('#famSignOut').addEventListener('click', () => { const pp = Fam.personPlayer(); famSignOut(); famSay((pp ? pp.n + ' is' : 'You are') + ' signed out of this device.'); });
   $('#famLeave').addEventListener('click', e => {
-    if (!famSure(e.currentTarget, () => 'Leave board', 'Leave on this device? Scores stay on the board. Tap again')) return;
-    delete e.currentTarget.dataset.sure; e.currentTarget.textContent = 'Leave board';
-    famForget('You left the family board on this device. Join again any time with the code.');
+    if (!famSure(e.currentTarget, 'Remove "' + Fam.name + '" from this device? Scores stay on the board. Tap again')) return;
+    famDrop(Fam.code, 'The board was removed from this device. Join again any time with its code.');
   });
   window.addEventListener('online', () => { famFlush(); famRefresh(); });
 }
@@ -2268,6 +2457,7 @@ function toTitle() {
 }
 function startGame() {
   Snd.unlock();
+  if (famNeedsPlayer()) { openFam(cfg.board, 'Pick who is playing first: every game counts for a player.'); return; }
   const g = stageGrid();
   S = newState(g.cols, g.rows, false, cfg.board, cfg.speed);
   spawnFruit();
@@ -2435,7 +2625,7 @@ window.sidewinder = {
 };
 
 function boot(data) {
-  famLoad(); famBuild(); famWire();
+  const joined = famLoad(); famBuild(); famWire();
   buildHud(); buildPickers(); syncButtons(); drawSky();
   const saved = data && data.S;
   if (saved && saved.v === 2 && BOARDS[saved.board] && Array.isArray(saved.walls) && Array.isArray(saved.snake) && saved.snake.length) {
@@ -2447,6 +2637,7 @@ function boot(data) {
   if (document.fonts && document.fonts.load) document.fonts.load('20px Bungee').then(paintIcons).catch(() => {});
   requestAnimationFrame(t => { lastT = t; frame(t); });
   famFlush();
+  if (joined) { openFam(); famRefresh().then(() => { if (!famScreen.hidden) { famJoinedNote(); famRender(); } }); }
   if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('/sw.js').catch(() => {});
 }
 boot({});
